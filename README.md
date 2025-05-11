@@ -1,4 +1,6 @@
-# SK네트웍스 Family AI Camp 챗봇 시스템
+
+# SK네트웍스 Family AI Camp 훈련 도우미
+<img width="929" alt="Screenshot 2025-05-12 at 5 49 15 AM" src="https://github.com/user-attachments/assets/2718f7ba-9420-41e2-abb7-8e0817e04d67" />
 
 ## 프로젝트 개요
 
@@ -29,6 +31,7 @@
   - 추천 질문 버튼, 감정 상태 등
 
 ---
+<img width="1174" alt="Screenshot 2025-05-12 at 5 45 07 AM" src="https://github.com/user-attachments/assets/34d44547-6792-44d4-8082-fc5cd07a581c" />
 
 ## 시스템 구조
 
@@ -89,14 +92,22 @@
 
 ---
 
-## 주요 폴더/파일 구조
+## 배포
+<img width="1583" alt="Screenshot 2025-05-12 at 6 59 15 AM" src="https://github.com/user-attachments/assets/61554f96-82b6-4196-93e9-5848454228b9" />
 
 ---
 
 ## 사용 예시
 
+<img width="1172" alt="Screenshot 2025-05-12 at 5 47 24 AM" src="https://github.com/user-attachments/assets/f423fcd7-0b36-4314-b71a-a405b35a7f6f" />
+
+
 - **실시간 질문**: "오늘 점심은 언제인가요?" → 관련 FAQ/문서 검색 후 LLM 답변
 - **추천 질문**: "출결 확인 방법", "캠프 일정", "상담 신청" 등 랜덤 추천
+
+<img width="1597" alt="Screenshot 2025-05-12 at 5 51 02 AM" src="https://github.com/user-attachments/assets/cda46b7e-55da-406b-97eb-9f1db8454190" />
+
+- **캠퍼스 FAQ 제공**: 수강생들이 자주 묻는 질문들 정리
 
 
 ---
@@ -116,5 +127,11 @@
 
 ---
 
-## 라이선스
+## 회고
+
+**박현준**:
+**편성민**:
+**전서빈**:
+**조영훈**:
+**김재혁**:
 
