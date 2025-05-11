@@ -6,7 +6,7 @@
 
 이 챗봇은 SK네트웍스 Family AI Camp의 수강생, 매니저, 강사 등 캠프 구성원들이  
 실시간으로 정보를 얻고, 고민을 상담하며, 캠프 생활을 더 편리하게 할 수 있도록  
-설계된 **AI 매니저 '하루(HAL-U)'** 챗봇 시스템입니다.
+설계된 **AI 매니저 '하루(HARU)'** 챗봇 시스템입니다.
 
 ---
 
@@ -95,6 +95,11 @@
 ## 배포
 <img width="1583" alt="Screenshot 2025-05-12 at 6 59 15 AM" src="https://github.com/user-attachments/assets/61554f96-82b6-4196-93e9-5848454228b9" />
 
+- **AWS Route 53**: 퍼블릭 도메인을 AWS DNS로 매핑
+- **AWS Certificate Manager**: SSL 인증서 발급 후 확인 -> HTTPS 요청
+- **AWS Elastic Beanstalk**: AWS S3, AWS ELB, AWS RDS, AWS Cloudwatch, EC2 instances, Auto Scaling 등의 서비스 연동을 자동화 
+
+
 ---
 
 ## 사용 예시
@@ -102,11 +107,11 @@
 <img width="1172" alt="Screenshot 2025-05-12 at 5 47 24 AM" src="https://github.com/user-attachments/assets/f423fcd7-0b36-4314-b71a-a405b35a7f6f" />
 
 
-- **실시간 질문**: "오늘 점심은 언제인가요?" → 관련 FAQ/문서 검색 후 LLM 답변
-- **추천 질문**: "출결 확인 방법", "캠프 일정", "상담 신청" 등 랜덤 추천
 
 <img width="1597" alt="Screenshot 2025-05-12 at 5 51 02 AM" src="https://github.com/user-attachments/assets/cda46b7e-55da-406b-97eb-9f1db8454190" />
 
+- **실시간 질문**: "오늘 점심은 언제인가요?" → 관련 FAQ/문서 검색 후 LLM 답변
+- **추천 질문**: "출결 확인 방법", "캠프 일정", "상담 신청" 등 랜덤 추천
 - **캠퍼스 FAQ 제공**: 수강생들이 자주 묻는 질문들 정리
 
 
@@ -130,8 +135,12 @@
 ## 회고
 
 **박현준**:
+
 **편성민**:
+
 **전서빈**:
+
 **조영훈**:
+
 **김재혁**:
 
