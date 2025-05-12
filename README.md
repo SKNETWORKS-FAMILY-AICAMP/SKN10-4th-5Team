@@ -3,7 +3,7 @@
 <img width="929" alt="Screenshot 2025-05-12 at 5 49 15 AM" src="https://github.com/user-attachments/assets/2718f7ba-9420-41e2-abb7-8e0817e04d67" />
 
 ## 0. 팀 소개
-  ## 팀명: SK네트웍스 Family AI 매니저 '하루'
+  ## 프로젝트명: SK네트웍스 Family AI 매니저 '하루'
 
   ## 팀원 소개
 
