@@ -12,27 +12,27 @@
     <td align="center">
       <a href="https://github.com/PyeonMin"><b>@편성민</b></a>
       <br>
-      <img src="img/teamimg/편성민.png" width="150" height="150">
+      <img src="img/vic.png" width="150" height="150">
     </td>
     <td align="center">
       <a href="https://github.com/phjoon1012"><b>@박현준</b></a>
       <br>
-      <img src="img/teamimg/.png" width="150" height="150">
+      <img src="img/ru.png" width="150" height="150">
     </td>
     <td align="center">
       <a href="https://github.com/KimJaeHyeok01"><b>@김재혁</b></a>
       <br>
-      <img src="img/teamimg/.png" width="150" height="150">
+      <img src="img/e.png" width="150" height="150">
     </td>
     <td align="center">
       <a href="https://github.com/wjstjqls"><b>@전서빈</b></a>
       <br>
-      <img src="img/teamimg/.png" width="150" height="150">
+      <img src="img/pi.png" width="150" height="150">
     </td>
     <td align="center">
       <a href="https://github.com/yhcho0319"><b>@조영훈</b></a>
       <br>
-      <img src="img/teamimg/.png" width="150" height="150">
+      <img src="img/sha.png" width="150" height="150">
     </td>
   </tr>
 </table>
@@ -238,11 +238,11 @@
 
 **박현준**: AWS와 웹 관련 기술에 대해 알아볼 수 있는 좋은 경험이었습니다. 팀원들께서 많이 도와주셔서 함께 알아가는 재미도 있었던 것 같습니다. 최종 프로젝트도 수강생 여러분 모두 건승을 빕니다.
 
-**편성민**:
+**편성민**: 지난번 프로젝트에서 발전시켜 잘 마무리할 수 있었습니다. 팀원분들의 도움으로 이번 프로젝트도 잘 끝낼수 있어 감사하게 생각하고 있습니다. 
 
-**전서빈**:
+**전서빈**: 문서 청크 분할, Retriever 튜닝, 예외 처리 등 실제 서비스에 가까운 로직을 경험할 수 있었고, 단순한 코드 구현을 넘어서 ‘왜 이렇게 구성해야 하는지’를 고민하게 된 시간이었습니다.
 
-**조영훈**:
+**조영훈**: 웹 관련 기술을 실제로 적용해 볼 수 있는 좋은 기회였고 팀장님이 잘 이끌어 주셔서 좋았습니다.
 
-**김재혁**:
+**김재혁**: 팀원들과의 끊임없는 피드백과 의견 조율 덕분에 실용적인 결과물이 나올 수 있었고, 함께 문제를 해결해 나가는 경험이 큰 동기부여가 되었습니다.
 
