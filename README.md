@@ -1,6 +1,42 @@
 
-# SK네트웍스 Family AI Camp 훈련 도우미
+## SK네트웍스 Family AI Camp 훈련 도우미
 <img width="929" alt="Screenshot 2025-05-12 at 5 49 15 AM" src="https://github.com/user-attachments/assets/2718f7ba-9420-41e2-abb7-8e0817e04d67" />
+
+## 0. 팀 소개
+  ## 팀명: SK네트웍스 Family AI 매니저 하루
+
+  ## 팀원 소개
+
+<table align="center" width="100%">
+  <tr>
+    <td align="center">
+      <a href="https://github.com/PyeonMin"><b>@편성민</b></a>
+      <br>
+      <img src="img/teamimg/편성민.png" width="150" height="150">
+    </td>
+    <td align="center">
+      <a href="https://github.com/phjoon1012"><b>@박현준</b></a>
+      <br>
+      <img src="img/teamimg/.png" width="150" height="150">
+    </td>
+    <td align="center">
+      <a href="https://github.com/KimJaeHyeok01"><b>@김재혁</b></a>
+      <br>
+      <img src="img/teamimg/.png" width="150" height="150">
+    </td>
+    <td align="center">
+      <a href="https://github.com/wjstjqls"><b>@전서빈</b></a>
+      <br>
+      <img src="img/teamimg/.png" width="150" height="150">
+    </td>
+    <td align="center">
+      <a href="https://github.com/yhcho0319"><b>@조영훈</b></a>
+      <br>
+      <img src="img/teamimg/.png" width="150" height="150">
+    </td>
+  </tr>
+</table>
+
 
 ## 프로젝트 개요
 
@@ -31,11 +67,78 @@
   - 추천 질문 버튼, 감정 상태 등
 
 ---
+
+
+## 기술 스택
+
+| 구분 | 기술 | 설명 |
+|------|------|------|
+| **언어/환경** | Python, `.env` | 전체 백엔드 로직 구현, 환경 변수 관리 |
+| **데이터 수집** | PyPDF2, 파일 I/O | CSV, PDF, TXT 등 문서 로딩 |
+| **데이터 처리** | pandas, numpy | 데이터프레임 변환, 수치 연산 등 |
+| **문서 처리** | LangChain, 문서 청크 분할 모듈 | 긴 문서 청크 처리 및 문서 변환 |
+| **벡터 저장소** | FAISS (추가 예정), LangChain 내장 벡터 검색 | 벡터 검색 기반 유사 문서 조회 |
+| **임베딩 모델** | OpenAIEmbeddings | 문서 및 쿼리 임베딩 |
+| **LLM** | OpenAI GPT-3.5-turbo | 컨텍스트 기반 응답 생성 |
+| **RAG 엔진** | Retriever + LLM (LangChain RAG 구조) | 문서 검색 후 GPT 응답 결합 |
+| **추천 질문 기능** | 랜덤 추출 (FAQ 기반) | 사용자 탐색 편의성 제공 |
+| **프론트엔드** | HTML, CSS, JavaScript, Bootstrap, Canvas | 챗 UI 및 캐릭터 인터페이스 구현 |
+| **배포 인프라** | AWS Elastic Beanstalk, S3, Route 53, ACM, RDS 등 | 도메인 연결, 인증서 발급, 오토스케일링 등 |
+
+
+## 데이터 수집 및 전처리
+
+### 데이터 출처
+
+#### 주요 데이터 소스
+
+- **네이버 블로그**
+  - 네이버 검색 API 및 웹 크롤링을 통한 수집
+  - 비로그인 오픈 API 키(Client ID, Client Secret) 활용
+
+- **유튜브 영상**
+  - YouTube Data API를 통한 자막 데이터 수집
+  - 영상 메타데이터(제목, 채널명, 업로드 날짜 등) 포함
+
+- **회고록 블로그**
+  - 7~12기 부트캠프 수료생 블로그 회고록
+  - 부트캠프 입소자들의 경험과 문제점 정형화
+
+- **구글 설문**
+  - 수강생들의 생생한 고충과 경험 공유
+  - 실시간 피드백 수집
+
+### 데이터 구조
+
+#### CSV 파일 구조
+
+- campusfaq.csv: 캠퍼스 관련 FAQ 데이터
+- coding_tips.csv: 코딩 팁 및 학습 자료
+- codingstudy.csv: 코딩 학습 관련 데이터
+
+#### 주요 컬럼
+- id: 고유 식별자
+- url: 원본 데이터 URL
+- upload_date: 데이터 수집/업로드 날짜
+- title: 제목
+- content: 본문 내용
+
+### 데이터 전처리
+
+#### 텍스트 정제
+  - 비속어 및 부적절한 콘텐츠 필터링
+  - HTML 태그 제거
+  - 특수문자 및 이모지 정리
+
+#### 데이터 정규화
+  - 날짜 형식 통일
+  - URL 정규화
+  - 텍스트 인코딩 통일 (UTF-8)
+
 <img width="1174" alt="Screenshot 2025-05-12 at 5 45 07 AM" src="https://github.com/user-attachments/assets/34d44547-6792-44d4-8082-fc5cd07a581c" />
 
+
 ## 시스템 구조
-
-
 
 
 ### 1. **백엔드**
@@ -137,7 +240,7 @@
 
 **편성민**:
 
-**전서빈**: 다시 한번 챗봇을 만들 수 있어 좋았고, 그 챗봇을 AWS를 통해 팀장님 및 팀원분들과 함께 배포까지 해볼 수 있어 좋은 경험이었습니다.
+**전서빈**:
 
 **조영훈**:
 
