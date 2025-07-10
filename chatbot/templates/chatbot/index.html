@@ -1,0 +1,101 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SK네트웍스 Family AI Camp</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #FFF5EB 0%, #FFF 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #FF6B00;
+            margin-bottom: 2rem;
+            font-size: 2.5rem;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .button {
+            display: inline-flex;
+            align-items: center;
+            padding: 1rem 2rem;
+            background-color: #FF6B00;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            margin: 0.5rem;
+            min-width: 200px;
+            justify-content: center;
+        }
+
+        .button.faq {
+            background-color: #333;
+        }
+
+        .button:hover {
+            background-color: #E65000;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .button.faq:hover {
+            background-color: #222;
+        }
+
+        .button i {
+            margin-right: 8px;
+            font-size: 1.2em;
+        }
+
+        .description {
+            margin: 2rem 0;
+            color: #666;
+            max-width: 600px;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>SK네트웍스 Family AI Camp</h1>
+        <p class="description">
+            AI 챗봇을 통해 궁금한 점을 물어보거나, FAQ를 통해 자주 묻는 질문들을 확인해보세요.
+        </p>
+        <div class="buttons">
+            <a href="{% url 'chat_home' %}" class="button">
+                <i class="fas fa-robot"></i>
+                AI 챗봇 시작하기
+            </a>
+            <a href="{% url 'faq_home' %}" class="button faq">
+                <i class="fas fa-book"></i>
+                FAQ 보기
+            </a>
+        </div>
+    </div>
+</body>
+</html> 

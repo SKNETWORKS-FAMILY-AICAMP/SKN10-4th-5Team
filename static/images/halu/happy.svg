@@ -1,0 +1,12 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    <!-- 기본 원형 -->
+    <circle cx="100" cy="100" r="90" fill="#FFFFFF" stroke="#FF6B00" stroke-width="4"/>
+    <!-- 눈 (웃는 표정) -->
+    <path d="M65 85 Q70 80 75 85" stroke="#FF6B00" stroke-width="4"/>
+    <path d="M125 85 Q130 80 135 85" stroke="#FF6B00" stroke-width="4"/>
+    <!-- 입 (웃는 표정) -->
+    <path d="M70 110 Q100 140 130 110" stroke="#FF6B00" stroke-width="4" fill="none"/>
+    <!-- 안테나 -->
+    <circle cx="100" cy="30" r="6" fill="#FF6B00"/>
+    <line x1="100" y1="36" x2="100" y2="50" stroke="#FF6B00" stroke-width="4"/>
+</svg> 

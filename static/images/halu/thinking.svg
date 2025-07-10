@@ -1,0 +1,13 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    <!-- 기본 원형 -->
+    <circle cx="100" cy="100" r="90" fill="#FFFFFF" stroke="#FF6B00" stroke-width="4"/>
+    <!-- 눈 (-_-) -->
+    <line x1="65" y1="90" x2="85" y2="90" stroke="#FF6B00" stroke-width="4"/>
+    <line x1="115" y1="90" x2="135" y2="90" stroke="#FF6B00" stroke-width="4"/>
+    <!-- 입 (작은 선) -->
+    <line x1="90" y1="120" x2="110" y2="120" stroke="#FF6B00" stroke-width="4"/>
+    <!-- 생각하는 점들 (...) -->
+    <!-- 안테나 -->
+    <circle cx="100" cy="30" r="6" fill="#FF6B00"/>
+    <line x1="100" y1="36" x2="100" y2="50" stroke="#FF6B00" stroke-width="4"/>
+</svg> 

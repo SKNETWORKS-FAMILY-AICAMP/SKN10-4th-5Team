@@ -1,0 +1,29 @@
+/* 네비게이션 버튼 스타일 */
+.nav-buttons {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 1000;
+}
+
+.nav-button {
+    display: inline-flex;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    color: #333;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.nav-button:hover {
+    background-color: #e9ecef;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.nav-button i {
+    margin-right: 8px;
+} 

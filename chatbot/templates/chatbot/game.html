@@ -1,0 +1,534 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>수업시간 게임</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            background: #f0f0f0;
+            font-family: 'Pretendard', sans-serif;
+        }
+
+        .game-selector {
+            margin: 20px 0;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .game-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 16px;
+            color: #666;
+            min-width: 120px;
+        }
+
+        .game-btn.active {
+            background: #FF6B00;
+            color: white;
+        }
+
+        .game-container {
+            width: 800px;
+            height: 600px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .game-frame {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .warning {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 107, 0, 0.9);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 14px;
+            animation: fadeOut 5s forwards;
+        }
+
+        @keyframes fadeOut {
+            0% { opacity: 1; }
+            70% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        #dino-game, #snake-game, #bounce-game {
+            display: none;
+            width: 100%;
+            height: 100%;
+            background: #f7f7f7;
+        }
+
+        .ide-container {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: #1e1e1e;  /* VS Code 스타일 배경 */
+            color: #d4d4d4;
+            font-family: 'Consolas', monospace;
+            z-index: 1000;
+        }
+
+        .ide-header {
+            background: #252526;
+            padding: 0;
+            border-bottom: 1px solid #333;
+        }
+
+        .ide-tabs {
+            display: flex;
+            gap: 1px;
+        }
+
+        .ide-tab {
+            padding: 8px 20px;
+            background: #2d2d2d;
+            font-size: 12px;
+            cursor: pointer;
+            border-right: 1px solid #1e1e1e;
+        }
+
+        .ide-tab.active {
+            background: #1e1e1e;
+        }
+
+        .ide-actions {
+            padding: 5px 10px;
+            font-size: 11px;
+            color: #888;
+            display: flex;
+            gap: 15px;
+        }
+
+        .ide-sidebar {
+            position: absolute;
+            left: 0;
+            top: 38px;
+            width: 200px;
+            height: calc(100% - 38px);
+            background: #252526;
+            border-right: 1px solid #333;
+            padding: 10px;
+        }
+
+        .ide-main {
+            margin-left: 200px;
+            position: relative;
+            height: calc(100vh - 38px);  /* 헤더 높이 제외 */
+            overflow: hidden;  /* 스크롤 제어를 위해 필요 */
+        }
+
+        .folder {
+            margin-bottom: 10px;
+        }
+
+        .folder span {
+            color: #888;
+            font-size: 13px;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .file {
+            padding: 3px 20px;
+            font-size: 13px;
+            color: #d4d4d4;
+            cursor: pointer;
+        }
+
+        .file.active {
+            background: #37373d;
+        }
+
+        .class-name {
+            color: #4EC9B0;
+        }
+
+        .function {
+            color: #DCDCAA;
+        }
+
+        .self {
+            color: #569CD6;
+        }
+
+        .type {
+            color: #4EC9B0;
+        }
+
+        .ide-content {
+            padding: 20px 20px 20px 0;  /* 오른쪽 패딩만 유지 */
+            white-space: pre !important;
+            font-family: 'Consolas', 'Monaco', monospace;
+            line-height: 1.6;
+            font-size: 14px;
+            min-height: 100%;
+        }
+
+        .ide-content * {
+            white-space: pre !important;  /* 모든 하위 요소에도 적용 */
+        }
+
+        .line {
+            display: block;
+            height: 1.6em;  /* line-height와 동일하게 */
+            position: relative;
+        }
+
+        .indent {
+            margin-left: 2em;  /* 들여쓰기 간격 */
+        }
+
+        .indent-2 {
+            margin-left: 4em;
+        }
+
+        /* 커서 스타일 */
+        .ide-content::after {
+            content: '|';
+            animation: blink 1s infinite;
+            color: #d4d4d4;
+        }
+
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+
+        /* 줄 번호 스타일 */
+        .line-numbers {
+            position: absolute;
+            left: 0;
+            top: 0;
+            padding: 20px 10px;
+            background: #1e1e1e;
+            color: #858585;
+            border-right: 1px solid #333;
+            user-select: none;
+            font-size: 14px;
+            line-height: 1.6;
+            text-align: right;
+            min-height: 100%;
+            z-index: 1;
+        }
+
+        .ide-content-wrapper {
+            position: relative;
+            margin-left: 50px;
+            height: 100%;
+            overflow-y: auto;  /* 스크롤은 여기서 처리 */
+        }
+
+        .python-code {
+            color: #9cdcfe;
+        }
+
+        .comment {
+            color: #6a9955;
+        }
+
+        .string {
+            color: #ce9178;
+        }
+
+        .keyword {
+            color: #569cd6;
+        }
+
+        /* 스크롤바 스타일링 */
+        .ide-content-wrapper::-webkit-scrollbar {
+            width: 14px;
+        }
+
+        .ide-content-wrapper::-webkit-scrollbar-track {
+            background: #1e1e1e;
+        }
+
+        .ide-content-wrapper::-webkit-scrollbar-thumb {
+            background: #424242;
+            border: 3px solid #1e1e1e;
+            border-radius: 7px;
+        }
+
+        .ide-content-wrapper::-webkit-scrollbar-thumb:hover {
+            background: #4f4f4f;
+        }
+
+        .nav-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            background-color: white;
+            border: none;
+            border-radius: 5px;
+            color: #FF6B00;
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            z-index: 9999;  /* IDE보다 위에 표시 */
+        }
+
+        .nav-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .nav-button i {
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <a href="{% url 'chat_home' %}" class="nav-button">
+        <i class="fas fa-comment"></i>
+        하루와 대화하기
+    </a>
+
+    <div class="game-selector">
+        <button class="game-btn active" onclick="switchGame('war')">전쟁시대</button>
+        <button class="game-btn" onclick="switchGame('dino')">공룡게임</button>
+        <button class="game-btn" onclick="switchGame('snake')">스네이크</button>
+    </div>
+
+    <div class="game-container">
+        <iframe 
+            id="war-game"
+            class="game-frame"
+            src="https://www.crazygames.com/embed/age-of-war"
+            allow="fullscreen"
+            scrolling="no"
+            frameborder="0"
+        ></iframe>
+        <iframe 
+            id="dino-game"
+            class="game-frame"
+            src="https://chromedino.com/embed/"
+            frameborder="0"
+            scrolling="no"
+            allowfullscreen
+        ></iframe>
+        <iframe 
+            id="snake-game"
+            class="game-frame"
+            src="https://slither.io/"
+            frameborder="0"
+            scrolling="no"
+            allowfullscreen
+        ></iframe>
+    </div>
+
+    <div class="warning">
+        ⚠️ 수업 시간에는 게임보다 학습에 집중해주세요!
+    </div>
+
+    <div class="ide-container" id="fake-ide">
+        <div class="ide-header">
+            <div class="ide-tabs">
+                <div class="ide-tab active">
+                    <span>📄</span>
+                    <span>model.py</span>
+                </div>
+                <div class="ide-tab">
+                    <span>📄</span>
+                    <span>train.py</span>
+                </div>
+            </div>
+            <div class="ide-actions">
+                <span>Python 3.8.10 64-bit</span>
+                <span>UTF-8</span>
+                <span>LF</span>
+            </div>
+        </div>
+        <div class="ide-sidebar">
+            <div class="folder">
+                <span>📁 src</span>
+                <div class="file active">📄 model.py</div>
+                <div class="file">📄 train.py</div>
+                <div class="file">📄 utils.py</div>
+            </div>
+            <div class="folder">
+                <span>📁 data</span>
+                <div class="file">📄 train.csv</div>
+                <div class="file">📄 test.csv</div>
+            </div>
+        </div>
+        <div class="ide-main">
+            <div class="line-numbers" id="line-numbers"></div>
+            <div class="ide-content-wrapper">
+                <div class="ide-content" id="editor" contenteditable="true" spellcheck="false">
+<span class="line"><span class="keyword">import</span> torch</span>
+<span class="line"><span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn</span>
+<span class="line"><span class="keyword">import</span> torch.nn.functional <span class="keyword">as</span> F</span>
+<span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> List, Tuple, Dict</span>
+<span class="line"></span>
+<span class="line"><span class="comment"># AI 모델 아키텍처 정의</span></span>
+<span class="line"><span class="keyword">class</span> <span class="class-name">TransformerModel</span>(nn.Module):</span>
+<span class="line indent"><span class="keyword">def</span> <span class="function">__init__</span>(<span class="self">self</span>, vocab_size: <span class="type">int</span>,</span>
+<span class="line indent-2">d_model: <span class="type">int</span> = 512,</span>
+<span class="line indent-2">nhead: <span class="type">int</span> = 8,</span>
+<span class="line indent-2">num_layers: <span class="type">int</span> = 6) -> <span class="type">None</span>:</span>
+<span class="line indent-2"><span class="keyword">super</span>().<span class="function">__init__</span>()</span>
+<span class="line indent-2"></span>
+<span class="line indent-2"><span class="comment"># 임베딩 레이어</span></span>
+<span class="line indent-2"><span class="self">self</span>.embedding = nn.Embedding(vocab_size, d_model)</span>
+<span class="line indent-2"><span class="self">self</span>.pos_encoder = PositionalEncoding(d_model)</span>
+<span class="line indent-2"></span>
+<span class="line indent-2"><span class="comment"># 트랜스포머 레이어</span></span>
+<span class="line indent-2">encoder_layers = nn.TransformerEncoderLayer(d_model, nhead)</span>
+<span class="line indent-2"><span class="self">self</span>.transformer_encoder = nn.TransformerEncoder(</span>
+<span class="line indent-2">encoder_layers,</span>
+<span class="line indent-2">num_layers</span>
+<span class="line indent-2">)</span>
+<span class="line indent-2"></span>
+<span class="line indent-2"><span class="comment"># 출력 레이어</span></span>
+<span class="line indent-2"><span class="self">self</span>.decoder = nn.Linear(d_model, vocab_size)</span>
+<span class="line indent-2"><span class="self">self</span>.d_model = d_model</span>
+<span class="line indent-2"><span class="self">self</span>.init_weights()</span>
+<span class="line indent-2"></span>
+<span class="line indent-2"><span class="keyword">def</span> <span class="function">init_weights</span>(<span class="self">self</span>) -> <span class="type">None</span>:</span>
+<span class="line indent-2">initrange = 0.1</span>
+<span class="line indent-2"><span class="self">self</span>.embedding.weight.data.uniform_(-initrange, initrange)</span>
+<span class="line indent-2"><span class="self">self</span>.decoder.bias.data.zero_()</span>
+<span class="line indent-2"><span class="self">self</span>.decoder.weight.data.uniform_(-initrange, initrange)</span>
+<span class="line indent-2"></span>
+<span class="line indent-2"><span class="keyword">def</span> <span class="function">forward</span>(<span class="self">self</span>,</span>
+<span class="line indent-2">src: torch.Tensor,</span>
+<span class="line indent-2">src_mask: torch.Tensor) -> torch.Tensor:</span>
+<span class="line indent-2"><span class="comment"># 임베딩 및 위치 인코딩</span></span>
+<span class="line indent-2">embedded = <span class="self">self</span>.embedding(src) * math.sqrt(</span>
+<span class="line indent-2"><span class="self">self</span>.d_model</span>
+<span class="line indent-2">)</span>
+<span class="line indent-2">pos_encoded = <span class="self">self</span>.pos_encoder(embedded)</span>
+<span class="line indent-2"></span>
+<span class="line indent-2"><span class="comment"># 트랜스포머 인코더 통과</span></span>
+<span class="line indent-2">output = <span class="self">self</span>.transformer_encoder(</span>
+<span class="line indent-2">pos_encoded,</span>
+<span class="line indent-2">src_mask</span>
+<span class="line indent-2">)</span>
+<span class="line indent-2"></span>
+<span class="line indent-2"><span class="comment"># 디코더로 최종 출력</span></span>
+<span class="line indent-2">output = <span class="self">self</span>.decoder(output)</span>
+<span class="line indent-2"></span>
+<span class="line indent-2"><span class="keyword">return</span> output</span>
+<span class="line"></span>
+<span class="line"><span class="comment"># 모델 학습 설정</span></span>
+<span class="line">model_config = {</span>
+<span class="line indent-2">'vocab_size': 32000,</span>
+<span class="line indent-2">'d_model': 512,</span>
+<span class="line indent-2">'nhead': 8,</span>
+<span class="line indent-2">'num_layers': 6</span>
+<span class="line">}</span>
+<span class="line"></span>
+<span class="line"><span class="comment"># 모델 초기화</span></span>
+<span class="line">model = TransformerModel(**model_config)</span>
+<span class="line">optimizer = torch.optim.Adam(model.parameters())</span>
+<span class="line">criterion = nn.CrossEntropyLoss()</span></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function switchGame(type) {
+            const games = {
+                'war': document.getElementById('war-game'),
+                'dino': document.getElementById('dino-game'),
+                'snake': document.getElementById('snake-game'),
+            };
+            
+            const buttons = document.querySelectorAll('.game-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+
+            // 모든 게임 숨기기
+            Object.values(games).forEach(game => {
+                game.style.display = 'none';
+            });
+
+            // 선택된 게임만 보이기
+            games[type].style.display = 'block';
+            
+            // 버튼 활성화
+            const activeIndex = ['war', 'dino', 'snake'].indexOf(type);
+            buttons[activeIndex].classList.add('active');
+        }
+
+        // 5초 후 경고 메시지 제거
+        setTimeout(() => {
+            document.querySelector('.warning').style.display = 'none';
+        }, 5000);
+
+        // 줄 번호 업데이트 함수 수정
+        function updateLineNumbers() {
+            const content = document.getElementById('editor');
+            const lineNumbers = document.getElementById('line-numbers');
+            const contentWrapper = content.closest('.ide-content-wrapper');
+            
+            // 줄 수 계산
+            const lines = content.getElementsByClassName('line');
+            const numbers = Array.from({length: lines.length}, (_, i) => i + 1).join('\n');
+            
+            // 줄 번호 업데이트
+            lineNumbers.textContent = numbers;
+            
+            // 스크롤 동기화
+            lineNumbers.style.top = -contentWrapper.scrollTop + 'px';
+        }
+
+        // 스크롤 이벤트 리스너 추가
+        document.addEventListener('DOMContentLoaded', () => {
+            const contentWrapper = document.querySelector('.ide-content-wrapper');
+            contentWrapper.addEventListener('scroll', () => {
+                const lineNumbers = document.getElementById('line-numbers');
+                lineNumbers.style.top = -contentWrapper.scrollTop + 'px';
+            });
+        });
+
+        // IDE 토글 함수를 별도로 분리
+        function toggleIDE() {
+            const ide = document.getElementById('fake-ide');
+            const editor = document.getElementById('editor');
+            
+            if (ide.style.display === 'none') {
+                ide.style.display = 'block';
+                setTimeout(() => editor.focus(), 0);
+            } else {
+                ide.style.display = 'none';
+            }
+        }
+
+        // 키보드 이벤트 리스너
+        document.addEventListener('keydown', (e) => {
+            if (e.key.toLowerCase() === 'e') {
+                toggleIDE();
+            }
+        });
+    </script>
+</body>
+</html> 

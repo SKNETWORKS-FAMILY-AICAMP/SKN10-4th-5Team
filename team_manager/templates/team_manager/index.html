@@ -1,0 +1,2677 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>팀 매니저 | SK networks</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts - Noto Sans KR -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <style>
+        :root {
+            --sk-orange: #FF6B00;
+            --sk-orange-light: #FF8534;
+            --sk-orange-dark: #E65000;
+            --sk-black: #1A1A1A;
+            --sk-gray: #666666;
+            --sk-light-gray: #F7F7F7;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background: var(--sk-light-gray);
+            color: var(--sk-black);
+            line-height: 1.6;
+        }
+
+        .navbar {
+            background: white;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .navbar-brand img {
+            height: 80px;
+        }
+
+        .main-title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: white;
+            text-align: center;
+            margin: 4rem 0;
+            padding: 4rem;
+            background: linear-gradient(135deg, var(--sk-orange) 0%, var(--sk-orange-light) 100%);
+            border-radius: 2rem;
+            box-shadow: 0 20px 40px rgba(255, 107, 0, 0.2);
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: rgba(255,255,255,0.9);
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+
+        .step-card {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            border: none;
+        }
+
+        .step-number {
+            color: var(--sk-orange);
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: rgba(255,107,0,0.1);
+            border-radius: 2rem;
+        }
+
+        .step-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--sk-black);
+        }
+
+        .btn-sk {
+            background: var(--sk-orange);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            font-weight: 500;
+            border-radius: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-sk:hover {
+            background: var(--sk-orange-light);
+            transform: translateY(-2px);
+            color: white;
+        }
+
+        .form-control {
+            padding: 1rem;
+            border-radius: 1rem;
+            border: 2px solid #eee;
+            font-size: 1rem;
+        }
+
+        .form-control:focus {
+            border-color: var(--sk-orange);
+            box-shadow: 0 0 0 3px rgba(255,107,0,0.1);
+        }
+
+        .team-card {
+            background: #fff;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: all 0.2s ease;
+        }
+
+        .team-card:hover {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .team-card .badge {
+            padding: 6px 10px;
+            font-weight: 500;
+            font-size: 0.85rem;
+            border-radius: 6px;
+        }
+
+        .team-card .student-name {
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .team-card .border-bottom {
+            border-color: #f1f3f5 !important;
+        }
+
+        .project-badge {
+            display: inline-flex;
+            align-items: center;
+            background: #f8f9fa;
+            color: #495057;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .project-badge i {
+            color: #868e96;
+        }
+
+        .team-header {
+            background: var(--sk-orange);
+            color: white;
+            padding: 1.5rem;
+        }
+
+        .satisfaction-badge {
+            font-size: 1rem;
+            padding: 0.8rem 1.5rem;
+            border-radius: 2rem;
+            font-weight: 500;
+        }
+
+        .skill-badge {
+            font-size: 0.8rem;
+            border-radius: 0.5rem;
+            padding: 0.3rem 0.6rem;
+        }
+
+        .alert {
+            border-radius: 1rem;
+            border: none;
+        }
+
+        .alert-info {
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--primary-color);
+        }
+
+        .alert-light {
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        .modal-content {
+            border-radius: 1.5rem;
+            overflow: hidden;
+        }
+
+        .loading-spinner {
+            background: rgba(255,255,255,0.9);
+            backdrop-filter: blur(10px);
+        }
+
+        .loading-spinner .spinner-border {
+            color: var(--sk-orange);
+            width: 4rem;
+            height: 4rem;
+        }
+
+        /* 애니메이션 */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fadeInUp {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        /* 스크롤바 커스텀 */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--sk-orange);
+            border-radius: 4px;
+        }
+
+        /* 로딩 애니메이션 */
+        .loading-spinner .spinner-border {
+            width: 3rem;
+            height: 3rem;
+        }
+
+        /* 팀 카드 내부 스타일 */
+        .team-member {
+            padding: 0.8rem;
+            margin: 0.5rem 0;
+            border-radius: 0.7rem;
+            background: rgba(255, 255, 255, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .team-member:hover {
+            background: rgba(255, 255, 255, 0.8);
+            transform: translateX(5px);
+        }
+
+        /* 프로젝트 정보 뱃지 */
+        .project-badge {
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--primary-color);
+            padding: 0.5rem 1rem;
+            border-radius: 0.7rem;
+            margin-top: 1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* 다운로드 버튼 그룹 스타일링 */
+        .download-controls .btn-group {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.3rem;
+            border-radius: 0.8rem;
+        }
+
+        .download-controls .btn {
+            margin: 0 0.2rem;
+        }
+
+        /* 추가 스타일 */
+        .card {
+            border: none;
+            border-radius: 1rem;
+        }
+
+        .form-select, .form-control {
+            border-radius: 0.5rem;
+            padding: 0.75rem 1rem;
+            font-size: 0.95rem;
+        }
+
+        .alert-info {
+            background-color: rgba(13, 202, 240, 0.05);
+            border: 1px solid rgba(13, 202, 240, 0.1);
+            border-radius: 0.75rem;
+        }
+
+        code {
+            background: rgba(13, 202, 240, 0.1);
+            padding: 0.2rem 0.4rem;
+            border-radius: 0.25rem;
+            font-size: 0.85rem;
+        }
+
+        .form-check-input:checked {
+            background-color: var(--sk-orange);
+            border-color: var(--sk-orange);
+        }
+
+        .btn-primary {
+            background-color: var(--sk-orange);
+            border-color: var(--sk-orange);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--sk-orange-dark);
+            border-color: var(--sk-orange-dark);
+        }
+
+        /* 슬라이더 스타일링 */
+        .weight-slider-container {
+            background: white;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .weight-value {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--sk-orange);
+            background: rgba(255,107,0,0.1);
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.375rem;
+        }
+
+        .form-range {
+            height: 4px;
+        }
+
+        .form-range::-webkit-slider-thumb {
+            background: var(--sk-orange);
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .form-range::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+
+        .form-range::-webkit-slider-runnable-track {
+            background: #e9ecef;
+            height: 6px;
+            border-radius: 3px;
+        }
+
+        /* 툴팁 스타일 커스터마이징 */
+        .tooltip {
+            font-size: 0.875rem;
+            opacity: 1 !important;
+        }
+
+        .tooltip-inner {
+            background-color: var(--sk-black);
+            color: white;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        /* 정보 아이콘 스타일 */
+        .bi-info-circle {
+            font-size: 0.875rem;  /* 아이콘 크기 */
+            color: #6c757d;  /* 아이콘 색상 */
+            cursor: help;  /* 마우스 커서 모양 */
+        }
+
+        .bi-info-circle:hover {
+            color: #0d6efd;  /* 호버 시 아이콘 색상 */
+        }
+
+        /* 팀 카드 스타일 개선 */
+        .team-container .card {
+            border-radius: 12px;
+            transition: all 0.2s ease;
+            background: white;
+        }
+
+        .team-container .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+        }
+
+        .team-container .card-header {
+            border-radius: 12px 12px 0 0;
+        }
+
+        .team-container .badge {
+            font-weight: 500;
+            font-size: 0.85rem;
+        }
+
+        .team-container .fw-500 {
+            font-weight: 500;
+        }
+
+        .team-container .border-bottom {
+            border-color: #f0f0f0 !important;
+        }
+
+        .team-container .border-bottom:last-child {
+            border-bottom: none !important;
+        }
+
+        /* 상단 정보 스타일 */
+        .combination-info {
+            margin-bottom: 2rem;
+        }
+
+        .combination-info h4 {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .combination-info .badge {
+            font-weight: 500;
+            font-size: 1rem;
+        }
+
+        /* 상단 정보 스타일링 */
+        .combination-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+
+        .satisfaction-score {
+            display: inline-block;
+            background: #ffd43b;
+            color: #1a1a1a;
+            padding: 0.8rem 1.5rem;
+            border-radius: 100px;
+            font-weight: 500;
+            font-size: 1.1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        /* 팀 카드 새로운 디자인 */
+        .modern-team-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s ease;
+        }
+
+        .modern-team-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 12px rgba(0,0,0,0.1);
+        }
+
+        .team-header {
+            background: #f8f9fa;
+            padding: 1.2rem;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .team-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 0.5rem;
+        }
+
+        .team-avg {
+            display: inline-block;
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .members-container {
+            padding: 1rem;
+            flex-grow: 1;
+        }
+
+        .member-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            background: #f8f9fa;
+            transition: background-color 0.2s ease;
+        }
+
+        .member-row:hover {
+            background: #e9ecef;
+        }
+
+        .member-name {
+            font-size: 1rem;
+            font-weight: 500;
+            color: #1a1a1a;
+        }
+
+        .skill-indicator {
+            padding: 0.3rem 0.6rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        /* 스킬 레벨에 따른 색상 */
+        .high {
+            background: #37b24d;
+            color: white;
+        }
+
+        .medium {
+            background: #ffd43b;
+            color: #1a1a1a;
+        }
+
+        .low {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .project-info {
+            padding: 1rem;
+            background: #f8f9fa;
+            border-top: 1px solid #e9ecef;
+            color: #495057;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* 반응형 조정 */
+        @media (max-width: 768px) {
+            .modern-team-card {
+                margin-bottom: 1rem;
+            }
+            
+            .member-row {
+                padding: 0.6rem;
+            }
+        }
+
+        /* 만족도 점수 색상 */
+        .satisfaction-high {
+            background: #37b24d !important;
+            color: white !important;
+        }
+
+        .satisfaction-medium {
+            background: #ffd43b !important;
+            color: #1a1a1a !important;
+        }
+
+        .satisfaction-low {
+            background: #ff6b6b !important;
+            color: white !important;
+        }
+
+        /* 네비게이션 버튼 스타일 개선 */
+        .navigation-controls .btn {
+            padding: 0.8rem 1.5rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            margin: 0 0.25rem;
+            cursor: pointer;
+        }
+
+        .navigation-controls .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .navigation-controls .btn:not(:disabled):hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        /* 새로운 테이블 형식 레이아웃 */
+        .teams-table-container {
+            margin-bottom: 2rem;
+        }
+
+        .teams-table {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 1rem;
+        }
+
+        .team-section.card {
+            border: none;
+            border-radius: 1rem;
+            background: white;
+            transition: all 0.2s ease;
+        }
+
+        .team-section.card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+        }
+
+        .team-section .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--sk-black);
+        }
+
+        .team-section .badge {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            border-radius: 0.5rem;
+        }
+
+        .team-members {
+            margin: 0 -1rem;
+        }
+
+        .team-members .border-bottom {
+            border-color: #f0f0f0 !important;
+        }
+
+        .team-members .border-bottom:last-child {
+            border-bottom: none !important;
+        }
+
+        .team-members .fw-500 {
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--sk-black);
+        }
+
+        .bg-light {
+            background-color: var(--sk-light-gray) !important;
+        }
+
+        /* 반응형 디자인 */
+        @media (max-width: 1400px) {
+            .teams-table {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 992px) {
+            .teams-table {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 576px) {
+            .teams-table {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* 팀 평균 점수 스타일 */
+        .team-avg-score {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--sk-light-gray);
+            border-radius: 2rem;
+            font-weight: 600;
+            color: var(--sk-orange);
+        }
+
+        .team-avg-score i {
+            color: var(--sk-orange);
+            font-size: 1rem;
+        }
+
+        /* 학생 개인 점수 스타일 */
+        .student-score {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .score-dots {
+            display: flex;
+            gap: 2px;
+        }
+
+        .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #e9ecef;
+            transition: all 0.2s ease;
+        }
+
+        .dot.filled {
+            background: var(--sk-orange);
+        }
+
+        .score-number {
+            font-weight: 600;
+            color: var(--sk-gray);
+            min-width: 24px;
+            text-align: right;
+        }
+
+        /* 프로젝트 태그 스타일 */
+        .project-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--sk-light-gray);
+            border-radius: 2rem;
+            color: var(--sk-gray);
+            font-weight: 500;
+        }
+
+        .project-tag i {
+            color: var(--sk-orange);
+        }
+
+        /* 결과 헤더 스타일링 */
+        .result-header {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .metrics-wrapper {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            padding: 1rem;
+        }
+
+        .satisfaction-progress,
+        .balance-progress,
+        .preference-progress,
+        .project-progress,
+        .collaboration-progress,
+        .size-balance-progress {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .metrics-wrapper > div:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .metric-label {
+            font-size: 1rem;
+            font-weight: 500;
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-detail {
+            font-size: 0.85rem;
+            text-align: center;
+            margin-top: 0.5rem;
+        }
+
+        .result-title h4 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--sk-black);
+        }
+
+        .satisfaction-score {
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            border-radius: 2rem;
+            font-weight: 500;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .download-controls {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .download-controls .btn,
+        .navigation-controls .btn {
+            padding: 0.5rem 1rem;
+            border-radius: 0.75rem;
+            font-weight: 500;
+        }
+
+        /* 팀 섹션 스타일 수정 */
+        .team-header {
+            margin-bottom: 1rem;
+        }
+
+        .team-header .project-tag {
+            margin-top: 0.75rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.4rem 1rem;
+            background: var(--sk-light-gray);
+            border-radius: 2rem;
+            color: var(--sk-gray);
+            font-size: 0.9rem;
+        }
+
+        .team-members {
+            margin-top: 1rem;
+            min-height: 240px; /* 팀원 수에 관계없이 일정한 높이 유지 */
+            display: flex;
+            flex-direction: column;
+        }
+
+        .team-members .border-bottom {
+            padding: 0.75rem 0;
+        }
+
+        /* 반응형 디자인 개선 */
+        @media (max-width: 992px) {
+            .result-header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .action-buttons {
+                width: 100%;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+        }
+
+        /* 페이지네이션 스타일 */
+        .combination-pagination {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 2rem;
+            padding: 1rem;
+            background: white;
+            border-radius: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .combination-counter {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--sk-black);
+        }
+
+        .btn-arrow {
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: var(--sk-orange);
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .btn-arrow:hover:not(.disabled) {
+            transform: scale(1.1);
+            color: var(--sk-orange-dark);
+        }
+
+        .btn-arrow.disabled {
+            color: #ccc;
+            cursor: not-allowed;
+        }
+
+        /* 기존 네비게이션 컨트롤 숨기기 */
+        .navigation-controls {
+            display: none;
+        }
+
+        /* 만족도 프로그레스 스타일 */
+        .satisfaction-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+
+        .satisfaction-progress {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* 원형 차트 스타일 수정 */
+        .circular-chart {
+            width: 100px;  /* 120px에서 100px로 감소 */
+            height: 100px;  /* 120px에서 100px로 감소 */
+            --progress-color: var(--sk-orange);
+        }
+
+        .circular-chart .progress {
+            stroke: var(--progress-color);
+            stroke-linecap: round;
+            transition: stroke-dasharray 0.5s ease;
+        }
+
+        .circular-chart text {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 10px;  /* 12px에서 10px로 감소 */
+            font-weight: 600;
+            fill: var(--sk-black);
+            text-anchor: middle;
+            dominant-baseline: middle;
+        }
+
+        .satisfaction-label {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--sk-gray);
+            margin-top: 0.5rem;
+        }
+
+        .satisfaction-detail {
+            font-size: 0.85rem;
+            color: var(--sk-gray);
+            opacity: 0.8;
+        }
+
+        /* 만족도에 따른 색상 변경 */
+        .satisfaction-progress[data-percent="high"] {
+            --progress-color: #2ecc71;
+        }
+
+        .satisfaction-progress[data-percent="medium"] {
+            --progress-color: #f1c40f;
+        }
+
+        .satisfaction-progress[data-percent="low"] {
+            --progress-color: #e74c3c;
+        }
+
+        /* 지표 래퍼의 간격 조정 */
+        .metrics-wrapper {
+            gap: 3rem;  /* 4rem에서 3rem으로 감소 */
+        }
+
+        .satisfaction-progress, .balance-progress {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .circular-chart {
+            width: 180px;
+            height: 180px;
+        }
+
+        .metric-label {
+            font-size: 1rem;  /* 1.1rem에서 1rem으로 감소 */
+            font-weight: 500;
+            color: var(--sk-black);
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-detail {
+            font-size: 0.85rem;  /* 0.9rem에서 0.85rem으로 감소 */
+            color: var(--sk-gray);
+            margin-top: 0.5rem;
+        }
+
+        .team-circles {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .skill-distribution {
+            width: 180px;
+            height: 180px;
+        }
+
+        .circle-header {
+            margin-bottom: -1rem;  /* 팀 번호를 원 위로 올림 */
+            z-index: 1;
+        }
+
+        .team-number {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--sk-black);
+        }
+
+        .team-avg {
+            font-size: 0.9rem;
+            color: var(--sk-gray);
+        }
+
+        /* 균형도 지표 스타일 수정 */
+        .balance-chart {
+            position: relative;
+            width: 500px;  /* 300px에서 500px로 증가 */
+            height: 100px;  /* 높이 조정 */
+            padding: 1rem;
+            background: none;
+        }
+
+        .balance-bars {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 100%;
+            position: relative;
+        }
+
+        .balance-bar-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 20%;
+            height: 100%;
+            position: relative;
+            padding: 0 15px;  /* 막대 사이 간격 증가 */
+        }
+
+        .balance-bar {
+            width: 6px;  /* 막대 두께 감소 */
+            position: absolute;
+            border-radius: 3px;
+            transition: all 0.3s ease;
+        }
+
+        .balance-bar.above {
+            background: var(--sk-orange);  /* 상단 막대 색상을 SK 오렌지로 변경 */
+        }
+
+        .balance-bar.below {
+            background: var(--sk-orange);  /* 하단 막대 색상도 SK 오렌지로 통일 */
+            opacity: 0.5;  /* 투명도로 구분 */
+        }
+
+        .team-label {
+            position: absolute;
+            bottom: -20px;
+            font-size: 0.85rem;
+            color: var(--sk-gray);
+            font-weight: 500;
+        }
+
+        .balance-center-line {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;  /* 선 두께 감소 */
+            background: #e9ecef;  /* 선 색상 변경 */
+            transform: translateY(-50%);
+        }
+
+        .balance-score {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.25rem;
+            margin-top: 1.5rem;
+        }
+
+        /* 점수 표시 스타일 통일 */
+        .satisfaction-label, .score-label {
+            font-size: 0.9rem;
+            color: var(--sk-gray);
+            margin-bottom: 0.25rem;
+        }
+
+        .satisfaction-detail, .score-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--sk-black);
+        }
+
+        /* 반응형 조정 */
+        @media (max-width: 768px) {
+            .metrics-wrapper {
+                flex-direction: column;
+                align-items: center;
+                gap: 2rem;
+            }
+        }
+
+        .team-balance-indicator {
+            position: absolute;
+            bottom: -20px;
+            font-size: 0.7rem;
+            color: white;
+            padding: 2px 4px;
+            border-radius: 3px;
+            text-align: center;
+            min-width: 30px;
+            transform: translateX(-50%);
+            left: 50%;
+        }
+
+        .balance-bar {
+            position: relative;
+        }
+
+        .team-circles {
+            display: flex;
+            justify-content: space-around;  /* space-between에서 center로 변경 */
+            gap: 1rem;  /* 2rem에서 1rem으로 간격 축소 */
+            margin: 2rem 0;
+            padding: 0 2rem;  /* 좌우 여백 추가 */
+        }
+
+        .team-circle {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .circle-label {
+            font-size: 0.9rem;
+            color: var(--sk-gray);
+            font-weight: 500;
+        }
+
+        .skill-distribution {
+            width: 180px;  /* 150px에서 180px로 증가 */
+            height: 180px;  /* 150px에서 180px로 증가 */
+            background: #fafafa;
+            border-radius: 50%;
+            padding: 0.5rem;
+        }
+
+        .reference-circle {
+            fill: none;
+            stroke: #eee;
+            stroke-width: 0.5;
+        }
+
+        .average-circle {
+            fill: none;
+            stroke: var(--sk-orange);
+            stroke-width: 1;
+            stroke-dasharray: 3,3;
+        }
+
+        .member-point {
+            fill: var(--sk-orange);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            r: 4;  /* 3에서 4로 증가하여 점 크기 증가 */
+        }
+
+        .member-point:hover {
+            fill: var(--sk-orange-dark);
+            r: 5;  /* 4에서 5로 증가 */
+            filter: drop-shadow(0 0 2px rgba(255, 107, 0, 0.5));
+        }
+
+        .balance-legend {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            color: var(--sk-gray);
+        }
+
+        .legend-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .legend-dot.average {
+            border: 2px dashed var(--sk-orange);
+        }
+
+        .legend-dot.member {
+            background: var(--sk-orange);
+        }
+
+        .balance-section {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--sk-black);
+        }
+
+        .team-circles {
+            display: flex;
+            justify-content: space-between;
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .team-circle-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .circle-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .team-number {
+            font-weight: 600;
+            color: var(--sk-black);
+        }
+
+        .team-avg {
+            font-size: 0.85rem;
+            color: var(--sk-gray);
+        }
+
+        .skill-distribution {
+            width: 120px;
+            height: 120px;
+            background: #fafafa;
+            border-radius: 50%;
+            padding: 0.5rem;
+        }
+
+        .reference-circle {
+            fill: none;
+            stroke: #e9ecef;
+            stroke-width: 0.5;
+        }
+
+        .average-circle {
+            fill: none;
+            stroke: var(--sk-orange);
+            stroke-width: 1.5;
+            stroke-dasharray: 3,3;
+        }
+
+        .member-point {
+            fill: var(--sk-orange);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .member-point:hover {
+            fill: var(--sk-orange-dark);
+            r: 4;
+            filter: drop-shadow(0 0 2px rgba(255, 107, 0, 0.5));
+        }
+
+        .balance-legend {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            color: var(--sk-gray);
+        }
+
+        .legend-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .legend-dot.reference {
+            background: #e9ecef;
+        }
+
+        .legend-dot.average {
+            border: 2px dashed var(--sk-orange);
+        }
+
+        .legend-dot.member {
+            background: var(--sk-orange);
+        }
+
+        @media (max-width: 992px) {
+            .team-circles {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .team-circle-container {
+                flex: 0 0 calc(33.333% - 0.5rem);  /* 간격 조정 */
+            }
+        }
+
+        @media (max-width: 768px) {
+            .team-circle-container {
+                flex: 0 0 calc(50% - 0.5rem);  /* 간격 조정 */
+            }
+            
+            .skill-distribution {
+                width: 130px;  /* 모바일에서는 약간 작게 */
+                height: 130px;
+            }
+        }
+
+        /* 결과 섹션 레이아웃 수정 */
+        .result-content {
+            display: grid;
+            grid-template-columns: 1fr 2fr;  /* 1:2 비율로 좌우 분할 */
+            gap: 3rem;
+            margin-top: 2rem;
+        }
+
+        /* 왼쪽 만족도 섹션 */
+        .satisfaction-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        /* 오른쪽 팀 섹션 */
+        .teams-section {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        /* 팀 카드와 균형도 컨테이너 */
+        .team-balance-container {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        /* 팀 카드 스타일 */
+        .team-card {
+            flex: 1;
+            background: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        /* 팀 균형도 차트 */
+        .team-balance-chart {
+            width: 150px;
+            height: 150px;
+            flex-shrink: 0;
+        }
+
+        /* 반응형 디자인 */
+        @media (max-width: 1200px) {
+            .result-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .team-balance-container {
+                flex-direction: column;
+            }
+            
+            .team-balance-chart {
+                width: 120px;
+                height: 120px;
+            }
+        }
+
+        /* 팀 섹션 스타일 수정 */
+        .team-section {
+            position: relative;
+        }
+
+        .team-balance-indicator {
+            position: absolute;
+            top: -60px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 120px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 10px;
+        }
+
+        .team-balance-chart {
+            width: 100%;
+            height: 100%;
+        }
+
+        .reference-circle {
+            fill: none;
+            stroke: #eee;
+            stroke-width: 1;
+        }
+
+        .average-circle {
+            fill: none;
+            stroke: var(--sk-orange);
+            stroke-width: 1.5;
+            stroke-dasharray: 3,3;
+        }
+
+        .member-point {
+            fill: var(--sk-orange);
+            transition: all 0.3s ease;
+        }
+
+        .member-point:hover {
+            r: 4;
+            filter: drop-shadow(0 0 2px rgba(255, 107, 0, 0.5));
+        }
+
+        .balance-score {
+            font-size: 14px;
+            font-weight: 600;
+            fill: var(--sk-black);
+        }
+
+        .balance-label {
+            font-size: 12px;
+            fill: var(--sk-gray);
+        }
+
+        /* 결과 섹션 스타일 */
+        .result-section {
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            color: var(--sk-black);
+            font-weight: 600;
+        }
+
+        /* 섹션 구분선 */
+        .border-bottom {
+            border-color: #f0f0f0 !important;
+        }
+
+        /* 여백 조정 */
+        .metrics-wrapper {
+            gap: 2rem;
+            justify-content: center;
+        }
+
+        /* 팀 카드 그리드 조정 */
+        .teams-table {
+            gap: 1rem;
+            margin: 0;
+        }
+
+        /* 페이지네이션 중앙 정렬 */
+        .combination-pagination {
+            background: none;
+            box-shadow: none;
+            padding: 0;
+        }
+
+        /* 팀 역량 분포 차트 조정 */
+        .team-circles {
+            gap: 1.5rem;
+            justify-content: center;
+            margin: 2rem 0;
+        }
+
+        /* 가중치 정보 스타일 */
+        .weight-info {
+            font-size: 0.9rem;
+            color: var(--sk-gray);
+            margin-top: 0.5rem;
+        }
+
+        .weight-info span {
+            display: inline-flex;
+            align-items: center;
+            background: rgba(255, 107, 0, 0.1);
+            padding: 0.3rem 0.8rem;
+            border-radius: 2rem;
+            color: var(--sk-black);
+        }
+
+        /* 페이지네이션 섹션 스타일 수정 */
+        .pagination-section {
+            background: rgba(255, 107, 0, 0.02);
+            border-radius: 1rem;
+            padding: 1.5rem;
+        }
+
+        .combination-pagination {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .combination-counter {
+            font-weight: 500;
+            color: var(--sk-black);
+            padding: 0.5rem 1rem;
+            background: white;
+            border-radius: 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .btn-arrow {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            border: none;
+            border-radius: 50%;
+            color: var(--sk-orange);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: all 0.2s ease;
+        }
+
+        .btn-arrow:not(:disabled):hover {
+            background: var(--sk-orange);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .btn-arrow:disabled {
+            background: #f5f5f5;
+            color: #ccc;
+            cursor: not-allowed;
+        }
+
+        /* 가중치 테이블 스타일 */
+        .weights-table {
+            background: #f8f9fa;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            width: 400px;
+        }
+
+        .weights-table .table {
+            margin-bottom: 0;
+        }
+
+        .weights-table td {
+            padding: 0.5rem;
+            vertical-align: middle;
+            border: none;
+        }
+
+        .bg-orange {
+            background-color: var(--sk-orange) !important;
+        }
+
+        /* 툴팁 스타일 */
+        .team-tooltip {
+            padding: 0.5rem;
+        }
+
+        .tooltip-header {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .tooltip-content {
+            font-size: 0.85rem;
+            line-height: 1.4;
+        }
+
+        .tooltip-content div {
+            margin-bottom: 0.25rem;
+        }
+
+        /* 툴팁 화살표 스타일 수정 */
+        .tooltip.bs-tooltip-auto[x-placement^=top] .arrow::before {
+            border-top-color: var(--sk-black);
+        }
+
+        .tooltip-inner {
+            max-width: 200px;
+            padding: 0.5rem;
+            background-color: var(--sk-black);
+        }
+
+        /* 가중치 컨테이너 스타일 */
+        .weights-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .weight-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .weight-label {
+            font-size: 0.9rem;
+            color: var(--sk-gray);
+            white-space: nowrap;
+        }
+
+        .weight-bar {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .weight-value {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--sk-black);
+            min-width: 24px;
+            text-align: right;
+        }
+
+        .progress {
+            border-radius: 3px;
+            background-color: #eee;
+        }
+
+        .bg-orange {
+            background-color: var(--sk-orange) !important;
+        }
+
+        /* 분포도 설명 툴팁 스타일 */
+        .distribution-tooltip {
+            font-size: 0.9rem;  /* 글자 크기 약간 증가 */
+            line-height: 1.8;   /* 줄 간격 증가 */
+            text-align: left;
+            min-width: 400px;   /* 툴팁 최소 너비 설정 */
+            padding: 0.5rem;    /* 내부 여백 추가 */
+        }
+
+        .distribution-tooltip div {
+            margin-bottom: 0.5rem;  /* 항목 간 간격 증가 */
+            white-space: normal;    /* 긴 텍스트 자동 줄바꿈 */
+        }
+
+        /* 원형 차트 크기 증가 */
+        .skill-distribution {
+            margin-top: 20px;
+            width: 150px;  /* 180px에서 200px로 증가 */
+            height: 150px; /* 180px에서 200px로 증가 */
+        }
+
+        /* 팀 원형 차트 컨테이너 여백 조정 */
+        .team-circle-container {
+            padding: 1rem;
+            margin: 0.5rem;
+        }
+
+        /* 원형 차트 내 점 크기 증가 */
+        .member-point {
+            r: 3;  /* 4에서 5로 증가 */
+        }
+
+        /* 툴팁 최대 너비 제한 해제 */
+        .tooltip-inner {
+            max-width: none;  /* 기본 max-width 제거 */
+        }
+
+        .section-title i {
+            font-size: 0.9rem;
+            color: var(--sk-gray);
+            cursor: help;
+        }
+
+        .section-title i:hover {
+            color: var(--sk-orange);
+        }
+
+        .member-point {
+            r: 4;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .member-point:hover {
+            r: 6;
+            fill: var(--sk-orange-dark);
+            filter: drop-shadow(0 0 2px rgba(255, 107, 0, 0.5));
+        }
+
+        /* 팀원 툴팁 스타일 */
+        .tooltip {
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .tooltip-inner {
+            padding: 0.5rem 0.8rem;
+            background-color: var(--sk-black);
+            border-radius: 0.5rem;
+        }
+
+        /* 심플한 페이지네이션 스타일 */
+        .simple-pagination {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            padding: 0.5rem 1rem;
+            background: #f8f9fa;
+            border-radius: 0.5rem;
+            width: fit-content;
+            margin: 1rem auto 0;
+        }
+
+        .btn-simple-arrow {
+            background: none;
+            border: none;
+            padding: 0.25rem 0.5rem;
+            color: var(--sk-gray);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 1.1rem;
+        }
+
+        .btn-simple-arrow:not(:disabled):hover {
+            color: var(--sk-orange);
+        }
+
+        .btn-simple-arrow:disabled {
+            color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .combination-number {
+            font-size: 0.9rem;
+            color: var(--sk-gray);
+            font-weight: 500;
+            min-width: 100px;
+            text-align: center;
+        }
+
+        /* 기존 페이지네이션 관련 스타일 제거 */
+        .combination-pagination,
+        .pagination-section {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- 네비게이션 바 -->
+    <nav class="navbar">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <img src="{% static 'images/logo.png' %}" alt="SK networks">
+            </a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- 메인 타이틀 -->
+        <div class="main-title animate-fadeInUp">
+            팀 매니저 V.1.0.0
+            <div class="subtitle">
+                SK네트웍스 Family와 함께하는 AI 부트캠프
+            </div>
+            <div class="subtitle">
+                매니저님들의 칼퇴를 항상 응원합니다
+            </div>
+        </div>
+
+        <!-- 설정 카드 수정 -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-body p-4">
+                <h5 class="card-title mb-4 fs-4">팀 생성 설정</h5>
+
+                <!-- 최적화 프리셋 선택 -->
+                <div class="row g-4 mb-4">
+                    <div class="col-md-6">
+                        <label class="form-label">최적화 프리셋</label>
+                        <select id="optimizeFor" class="form-select" onchange="updateWeightPreset()">
+                            <option value="custom">직접 설정</option>
+                            <option value="balanced">균형 잡힌 팀</option>
+                            <option value="fairness">공정성 중심</option>
+                            <option value="satisfaction">만족도 중심</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 d-flex align-items-center">
+                        <div class="form-check mt-2">
+                            <input type="checkbox" id="useProjectPreference" class="form-check-input" onchange="toggleProjectWeight()">
+                            <label class="form-check-label">최종 프로젝트 선호도 반영</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 가중치 설정 -->
+                <div id="customWeights" class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <div class="weight-slider-container">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <label class="form-label small mb-0">
+                                    실력 균형 가중치
+                                    <i class="bi bi-info-circle ms-1" data-bs-toggle="tooltip" data-bs-placement="top" 
+                                       title="팀간의 성취도 점수 차이를 최소화합니다. 높을수록 팀 간의 격차가 줄어듭니다."></i>
+                                </label>
+                                <span class="weight-value" id="skillWeightValue">3.0</span>
+                            </div>
+                            <input type="range" class="form-range custom-range" id="skillWeight" min="0" max="5" step="0.1" value="3.0">
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="weight-slider-container">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <label class="form-label small mb-0">
+                                    선호도 가중치
+                                    <i class="bi bi-info-circle ms-1" data-bs-toggle="tooltip" data-bs-placement="top" 
+                                       title="함께하고 싶은 팀원 선호도를 반영합니다. 높을수록 학생들의 선호도가 더 많이 반영됩니다."></i>
+                                </label>
+                                <span class="weight-value" id="preferenceWeightValue">0.5</span>
+                            </div>
+                            <input type="range" class="form-range custom-range" id="preferenceWeight" min="0" max="5" step="0.1" value="0.5">
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="weight-slider-container">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <label class="form-label small mb-0">
+                                    이전 팀원 회피 가중치
+                                    <i class="bi bi-info-circle ms-1" data-bs-toggle="tooltip" data-bs-placement="top" 
+                                       title="이전에 같은 팀이었던 학생들이 다시 한 팀이 되는 것을 방지합니다. 높을수록 새로운 팀원과의 협업 기회가 늘어납니다."></i>
+                                </label>
+                                <span class="weight-value" id="previousTeamWeightValue">1.0</span>
+                            </div>
+                            <input type="range" class="form-range custom-range" id="previousTeamWeight" min="0" max="5" step="0.1" value="1.0">
+                        </div>
+                    </div>
+
+                    <div class="col-md-6" id="projectWeightInput">
+                        <div class="weight-slider-container">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <label class="form-label small mb-0">
+                                    프로젝트 선호도 가중치
+                                    <i class="bi bi-info-circle ms-1" data-bs-toggle="tooltip" data-bs-placement="top" 
+                                       title="학생들이 선택한 프로젝트 선호도(1~4지망)를 반영합니다. 높을수록 선호하는 프로젝트에 배정될 확률이 높아집니다."></i>
+                                </label>
+                                <span class="weight-value" id="projectWeightValue">0.5</span>
+                            </div>
+                            <input type="range" class="form-range custom-range" id="projectWeight" min="0" max="5" step="0.1" value="0.5">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CSV 가이드 -->
+                <div class="alert alert-info mb-4 p-4">
+                    <h6 class="alert-heading fs-6 mb-3">CSV 파일 포맷 안내</h6>
+                    <p class="mb-3 small">CSV 파일은 다음 열을 포함해야 합니다:</p>
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <ul class="list-unstyled small mb-0">
+                                <li class="mb-2"><code class="small">name</code>: 학생 이름</li>
+                                <li class="mb-2"><code class="small">skill_score</code>: 성취도 점수 (1-10점)</li>
+                                <li class="mb-2"><code class="small">want_with</code>: 함께하고 싶은 학생</li>
+                                <li class="mb-2"><code class="small">avoid_with</code>: 함께하지 않고 싶은 학생</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <ul class="list-unstyled small mb-0">
+                                <li class="mb-2"><code class="small">must_with</code>: 반드시 함께해야 하는 학생</li>
+                                <li class="mb-2"><code class="small">teamed_with</code>: 같은 팀을 했던 학생</li>
+                                <li class="mb-2"><code class="small">1지망</code>, <code class="small">2지망</code>: 프로젝트 선호도</li>
+                                <li class="mb-2"><code class="small">3지망</code>, <code class="small">4지망</code>: 프로젝트 선호도</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <hr class="my-3">
+                    <a href="#" onclick="showCSVExample(); return false;" class="alert-link small">
+                        <i class="bi bi-file-earmark-text"></i> 예시 CSV 파일 보기
+                    </a>
+                </div>
+
+                <!-- 파일 업로드 -->
+                <form id="csvUploadForm" class="mt-4">
+                    <div class="input-group">
+                        <input type="file" id="csvFile" class="form-control form-control-lg" accept=".csv">
+                        <button type="submit" class="btn btn-primary btn-lg px-4">
+                            <i class="bi bi-people me-2"></i>팀 생성하기
+                        </button>
+                    </div>
+                    <div class="form-text mt-2">CSV 파일만 업로드 가능합니다.</div>
+                </form>
+            </div>
+        </div>
+
+        <!-- 결과 표시 -->
+        <div class="combination-info mb-4"></div>
+
+        <!-- 네비게이션 버튼 -->
+        <div class="navigation-controls">
+            <div class="btn-group">
+                <button type="button" id="prevButton" class="btn" onclick="showPreviousCombination()">
+                    <i class="bi bi-chevron-left"></i> 이전
+                </button>
+                <button type="button" id="nextButton" class="btn" onclick="showNextCombination()">
+                    다음 <i class="bi bi-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- 팀 그리드 -->
+        <div class="team-container row g-4"></div>
+    </div>
+
+    <!-- CSV 예시 모달 수정 -->
+    <div class="modal fade" id="csvExampleModal" tabindex="-1" aria-labelledby="csvExampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="csvExampleModalLabel">CSV 파일 예시</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <img src="{% static 'images/sample.png' %}" class="img-fluid" alt="CSV 파일 예시">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- jsPDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/nanumfont"></script>
+
+    <script>
+        let currentCombinations = [];
+        let currentIndex = 0;
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        function updateTeamsDisplay(combinationData) {
+            if (!combinationData || !combinationData.assignment || !combinationData.skills) {
+                console.error('Invalid combination data:', combinationData);
+                return;
+            }
+
+            const infoContainer = document.querySelector('.combination-info');
+            const container = document.querySelector('.team-container');
+            
+            // 1. 팀 데이터 먼저 준비
+            const teams = Array(5).fill().map(() => []);
+            combinationData.assignment.forEach((teamNum, studentIdx) => {
+                teams[teamNum].push({
+                    name: combinationData.studentNames[studentIdx],
+                    skill: combinationData.skills[studentIdx]
+                });
+            });
+
+            // 2. 팀 균형도 계산
+            const teamStats = teams.map(members => {
+                if (members.length === 0) return { avg: 0, balance: 0 };
+                
+                // 팀 평균 계산
+                const teamAvg = members.reduce((sum, student) => sum + student.skill, 0) / members.length;
+                
+                // 팀 내 편차 계산
+                const deviations = members.map(student => Math.abs(student.skill - teamAvg));
+                const maxInternalDeviation = Math.max(...deviations);
+                
+                // 팀 내 균형도 계산 (최대 편차가 클수록 균형도가 낮아짐)
+                const internalBalance = Math.max(0, 100 - (maxInternalDeviation * 20));
+                
+                return {
+                    avg: teamAvg,
+                    balance: internalBalance,
+                    deviations: deviations
+                };
+            });
+
+            // 전체 균형도 계산 (팀 간 평균 비교)
+            const totalAverage = teamStats.reduce((sum, stat) => sum + stat.avg, 0) / teams.length;
+            const maxTeamDeviation = Math.max(...teamStats.map(stat => Math.abs(stat.avg - totalAverage)));
+            const overallBalance = Math.max(0, 100 - (maxTeamDeviation * 20));
+
+            // 만족도 계산 및 색상 설정
+            const satisfactionPercentage = (combinationData.satisfactionScore / combinationData.maxPossibleScore * 100).toFixed(0);
+            const satisfactionLevel = satisfactionPercentage >= 80 ? 'high' : satisfactionPercentage >= 60 ? 'medium' : 'low';
+
+            // 색상을 결정하는 함수 추가
+            function getProgressColor(percentage) {
+                if (percentage >= 80) return '#2ecc71';  // 높음 - 초록색
+                if (percentage >= 60) return '#f1c40f';  // 중간 - 노란색
+                return '#e74c3c';  // 낮음 - 빨간색
+            }
+
+            // teamStats 계산 부분에 새로운 메트릭 추가
+            const teamSizeBalance = (() => {
+                const targetSize = Math.ceil(combinationData.studentNames.length / 5); // 이상적인 팀 크기
+                const sizeDeviations = teams.map(members => Math.abs(members.length - targetSize));
+                const maxSizeDeviation = Math.max(...sizeDeviations);
+                return Math.max(0, 100 - (maxSizeDeviation * 25)); // 차이가 클수록 점수 감소
+            })();
+
+            // 새로운 협업 경험 메트릭 추가 (metrics-wrapper 내부에)
+            infoContainer.innerHTML = `
+                <div class="result-section bg-white rounded-4 p-4 shadow-sm">
+                    <!-- 가중치 바와 페이지네이션 섹션 -->
+                    <div class="mb-4 border-bottom pb-4">
+                        <h4 class="section-title mb-3">팀 구성 결과</h4>
+                        <div class="weights-container mb-3">
+                            <div class="weight-item">
+                                <span class="weight-label">실력 균형</span>
+                                <div class="weight-bar">
+                                    <div class="progress" style="height: 6px; width: 100px;">
+                                        <div class="progress-bar bg-orange" role="progressbar" 
+                                            style="width: ${document.getElementById('skillWeight').value * 20}%"></div>
+                                    </div>
+                                    <span class="weight-value">${document.getElementById('skillWeight').value}</span>
+                                </div>
+                            </div>
+                            <div class="weight-item">
+                                <span class="weight-label">선호도</span>
+                                <div class="weight-bar">
+                                    <div class="progress" style="height: 6px; width: 100px;">
+                                        <div class="progress-bar bg-orange" role="progressbar" 
+                                            style="width: ${document.getElementById('preferenceWeight').value * 20}%"></div>
+                                    </div>
+                                    <span class="weight-value">${document.getElementById('preferenceWeight').value}</span>
+                                </div>
+                            </div>
+                            <div class="weight-item">
+                                <span class="weight-label">이전 팀원 회피</span>
+                                <div class="weight-bar">
+                                    <div class="progress" style="height: 6px; width: 100px;">
+                                        <div class="progress-bar bg-orange" role="progressbar" 
+                                            style="width: ${document.getElementById('previousTeamWeight').value * 20}%"></div>
+                                    </div>
+                                    <span class="weight-value">${document.getElementById('previousTeamWeight').value}</span>
+                                </div>
+                            </div>
+                            ${document.getElementById('useProjectPreference').checked ? `
+                            <div class="weight-item">
+                                <span class="weight-label">프로젝트 선호도</span>
+                                <div class="weight-bar">
+                                    <div class="progress" style="height: 6px; width: 100px;">
+                                        <div class="progress-bar bg-orange" role="progressbar" 
+                                            style="width: ${document.getElementById('projectWeight').value * 20}%"></div>
+                                    </div>
+                                    <span class="weight-value">${document.getElementById('projectWeight').value}</span>
+                                </div>
+                            </div>
+                            ` : ''}
+                        </div>
+                        <!-- 심플한 페이지네이션 -->
+                        <div class="simple-pagination">
+                            <button class="btn-simple-arrow" onclick="showPreviousCombination()" ${currentIndex === 0 ? 'disabled' : ''}>
+                                <i class="bi bi-chevron-left"></i>
+                            </button>
+                            <span class="combination-number">조합 ${currentIndex + 1} / ${currentCombinations.length}</span>
+                            <button class="btn-simple-arrow" onclick="showNextCombination()" ${currentIndex === currentCombinations.length - 1 ? 'disabled' : ''}>
+                                <i class="bi bi-chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 2. 상단 메트릭스 섹션 -->
+                    <div class="metrics-section mb-4 border-bottom pb-4">
+                        <div class="metrics-wrapper">
+                            <!-- 만족도 지표 -->
+                            <div class="satisfaction-progress">
+                                <div class="metric-label">수강생 만족도</div>
+                                <svg viewBox="0 0 36 36" class="circular-chart">
+                                    <path d="M18 2.0845
+                                        a 15.9155 15.9155 0 0 1 0 31.831
+                                        a 15.9155 15.9155 0 0 1 0 -31.831"
+                                        fill="none"
+                                        stroke="#eee"
+                                        stroke-width="2.5"
+                                    />
+                                    <path d="M18 2.0845
+                                        a 15.9155 15.9155 0 0 1 0 31.831
+                                        a 15.9155 15.9155 0 0 1 0 -31.831"
+                                        fill="none"
+                                        stroke="${getProgressColor(satisfactionPercentage)}"
+                                        stroke-width="2.5"
+                                        stroke-dasharray="${satisfactionPercentage}, 100"
+                                    />
+                                    <text x="18" y="18" style="fill: ${getProgressColor(satisfactionPercentage)}">${satisfactionPercentage}%</text>
+                                </svg>
+                                <div class="metric-detail" style="color: ${getProgressColor(satisfactionPercentage)}">
+                                    ${combinationData.satisfactionScore} / ${combinationData.maxPossibleScore}
+                                </div>
+                            </div>
+
+                            <!-- 팀 균형도 지표 -->
+                            <div class="balance-progress">
+                                <div class="metric-label">전체 팀 균형도</div>
+                                <svg viewBox="0 0 36 36" class="circular-chart">
+                                    <path d="M18 2.0845
+                                        a 15.9155 15.9155 0 0 1 0 31.831
+                                        a 15.9155 15.9155 0 0 1 0 -31.831"
+                                        fill="none"
+                                        stroke="#eee"
+                                        stroke-width="2.5"
+                                    />
+                                    <path d="M18 2.0845
+                                        a 15.9155 15.9155 0 0 1 0 31.831
+                                        a 15.9155 15.9155 0 0 1 0 -31.831"
+                                        fill="none"
+                                        stroke="${getProgressColor(overallBalance)}"
+                                        stroke-width="2.5"
+                                        stroke-dasharray="${overallBalance}, 100"
+                                    />
+                                    <text x="18" y="18" style="fill: ${getProgressColor(overallBalance)}">${overallBalance.toFixed(0)}%</text>
+                                </svg>
+                                <div class="metric-detail" style="color: ${getProgressColor(overallBalance)}">
+                                    팀 간 실력 차이: ${maxTeamDeviation.toFixed(1)}점
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3. 팀 카드 섹션 -->
+                    <div class="teams-section mb-4 border-bottom pb-4">
+                        <div class="teams-table">
+                            ${teams.map((members, teamIdx) => {
+                                const avgSkill = members.reduce((sum, student) => sum + student.skill, 0) / members.length;
+                                
+                                return `
+                                    <div class="team-section card shadow-sm">
+                                        <div class="card-body p-4">
+                                            <div class="team-header">
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <h5 class="card-title mb-0">Team ${teamIdx + 1}</h5>
+                                                    <div class="team-avg-score">
+                                                        <i class="bi bi-star-fill"></i>
+                                                        <span>${avgSkill.toFixed(1)}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="team-members">
+                                                ${members.map(student => `
+                                                    <div class="d-flex justify-content-between align-items-center p-2 border-bottom">
+                                                        <span class="fw-500">${student.name}</span>
+                                                        <div class="student-score">
+                                                            <div class="score-dots">
+                                                                ${Array(10).fill().map((_, i) => `
+                                                                    <span class="dot ${i < student.skill ? 'filled' : ''}"></span>
+                                                                `).join('')}
+                                                            </div>
+                                                            <span class="score-number">${student.skill}</span>
+                                                        </div>
+                                                    </div>
+                                                `).join('')}
+                                            </div>
+                                        </div>
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                    </div>
+
+                    <!-- 4. 팀별 역량 분포 섹션 -->
+                    <div class="team-distribution-section">
+                        <h5 class="section-title mb-3">
+                            팀별 역량 분포
+                            <i class="bi bi-info-circle ms-2" 
+                               data-bs-toggle="tooltip" 
+                               data-bs-html="true"
+                               data-bs-title="
+                                    <div class='distribution-tooltip'>
+                                        <div>• 바깥쪽 원: 최고 점수(10점) 기준선</div>
+                                        <div>• 안쪽 원: 최저 점수(1점) 기준선</div>
+                                        <div>• 점선 원: 팀 평균 점수</div>
+                                        <div>• 주황색 점: 개별 팀원의 점수</div>
+                                        <div class='mt-2'>팀원들의 점수가 평균에 가까울수록 균형 잡힌 팀입니다.</div>
+                                    </div>
+                               ">
+                            </i>
+                        </h5>
+                        <div class="team-circles">
+                            ${teams.map((members, teamIdx) => {
+                                const avgSkill = members.reduce((sum, student) => sum + student.skill, 0) / members.length;
+                                return `
+                                    <div class="team-circle-container">
+                                        <div class="circle-header">
+                                            <div class="team-number">Team ${teamIdx + 1}</div>
+                                            <div class="team-avg">평균 ${avgSkill.toFixed(1)}점</div>
+                                        </div>
+                                        <svg viewBox="0 0 100 100" class="skill-distribution">
+                                            <circle cx="50" cy="50" r="40" class="reference-circle" />
+                                            <circle cx="50" cy="50" r="20" class="reference-circle" />
+                                            <circle cx="50" cy="50" r="${avgSkill * 4}" class="average-circle" />
+                                            ${members.map(student => {
+                                                const angle = (360 / members.length) * members.indexOf(student);
+                                                const radius = student.skill * 4;
+                                                const x = 50 + radius * Math.cos(angle * Math.PI / 180);
+                                                const y = 50 + radius * Math.sin(angle * Math.PI / 180);
+                                                return `
+                                                    <circle 
+                                                        cx="${x}" 
+                                                        cy="${y}" 
+                                                        r="4" 
+                                                        class="member-point"
+                                                        data-bs-toggle="tooltip"
+                                                        data-bs-placement="top"
+                                                        title="${student.name} (${student.skill}점)"
+                                                    />
+                                                `;
+                                            }).join('')}
+                                        </svg>
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                        <div class="balance-legend">
+                            <div class="legend-item">
+                                <div class="legend-dot reference"></div>
+                                <span>기준선</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-dot average"></div>
+                                <span>팀 평균</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-dot member"></div>
+                                <span>팀원</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // 툴팁 초기화만 유지
+            const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl, {
+                    container: 'body'
+                });
+            });
+        }
+
+        function showPreviousCombination() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                updateTeamsDisplay(currentCombinations[currentIndex]);
+            }
+        }
+
+        function showNextCombination() {
+            if (currentIndex < currentCombinations.length - 1) {
+                currentIndex++;
+                updateTeamsDisplay(currentCombinations[currentIndex]);
+            }
+        }
+
+        function toggleProjectWeight() {
+            const useProjectPreference = document.getElementById('useProjectPreference').checked;
+            const projectWeightInput = document.getElementById('projectWeightInput');
+            projectWeightInput.style.display = useProjectPreference ? 'block' : 'none';
+        }
+
+        // 페이지 로드 시 초기 상태 설정
+        document.addEventListener('DOMContentLoaded', function() {
+            toggleProjectWeight();
+            
+            // 툴크 초기화
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl)
+            });
+        });
+
+        // 슬라이더 값 업데이트 함수
+        function updateSliderValue(sliderId, valueId) {
+            const slider = document.getElementById(sliderId);
+            const valueDisplay = document.getElementById(valueId);
+            
+            slider.addEventListener('input', function() {
+                valueDisplay.textContent = parseFloat(this.value).toFixed(1);
+            });
+        }
+
+        // 모든 슬라이더에 이벤트 리스너 추가
+        document.addEventListener('DOMContentLoaded', function() {
+            updateSliderValue('skillWeight', 'skillWeightValue');
+            updateSliderValue('preferenceWeight', 'preferenceWeightValue');
+            updateSliderValue('previousTeamWeight', 'previousTeamWeightValue');
+            updateSliderValue('projectWeight', 'projectWeightValue');
+        });
+
+        // 프리셋 변경 시 슬라이더 값 업데이트
+        function updateWeightPreset() {
+            const preset = document.getElementById('optimizeFor').value;
+            const presets = {
+                'custom': {
+                    skillWeight: 2.0,
+                    preferenceWeight: 1.0,
+                    previousTeamWeight: 1.0,
+                    projectWeight: 1.0
+                },
+                'balanced': {
+                    skillWeight: 2.0,
+                    preferenceWeight: 0.5,
+                    previousTeamWeight: 1.0,
+                    projectWeight: 1.0
+                },
+                'fairness': {
+                    skillWeight: 3.0,
+                    preferenceWeight: 0.5,
+                    previousTeamWeight: 1.0,
+                    projectWeight: 0.5
+                },
+                'satisfaction': {
+                    skillWeight: 1.0,
+                    preferenceWeight: 2.0,
+                    previousTeamWeight: 1.0,
+                    projectWeight: 1.5
+                }
+            };
+
+            const values = presets[preset];
+            Object.keys(values).forEach(key => {
+                const slider = document.getElementById(key);
+                const valueDisplay = document.getElementById(key + 'Value');
+                if (slider && valueDisplay) {
+                    slider.value = values[key];
+                    valueDisplay.textContent = values[key].toFixed(1);
+                }
+            });
+        }
+
+        // 팀 생성 폼 제출 이벤트 리스너
+        document.getElementById('csvUploadForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData();
+            const fileField = document.getElementById('csvFile');
+            const submitButton = e.target.querySelector('button[type="submit"]');
+            const originalButtonHtml = submitButton.innerHTML;
+            
+            if (!fileField.files[0]) {
+                alert('파일을 선택해주세요.');
+                return;
+            }
+            
+            // 버튼 상태 변경
+            submitButton.disabled = true;
+            submitButton.innerHTML = `
+                <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                팀 생성 중...
+            `;
+            
+            formData.append('file', fileField.files[0]);
+            formData.append('optimizeFor', document.getElementById('optimizeFor').value);
+            formData.append('useProjectPreference', document.getElementById('useProjectPreference').checked);
+            
+            // 가중치 값 추가
+            formData.append('skillWeight', document.getElementById('skillWeight').value);
+            formData.append('preferenceWeight', document.getElementById('preferenceWeight').value);
+            formData.append('previousTeamWeight', document.getElementById('previousTeamWeight').value);
+            formData.append('projectWeight', document.getElementById('projectWeight').value);
+            
+            try {
+                const response = await fetch('/team/upload_csv/', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': getCookie('csrftoken'),
+                    },
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    currentCombinations = data.combinations;
+                    currentIndex = 0;
+                    if (currentCombinations.length > 0) {
+                        updateTeamsDisplay(currentCombinations[0]);
+                        // download-controls 관련 코드 제거
+                    }
+                } else {
+                    alert(data.error || '팀 생성에 실패했습니다.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('팀 생성 중 오류가 발생했습니다.');
+            } finally {
+                // 버튼 상태 복구
+                submitButton.disabled = false;
+                submitButton.innerHTML = originalButtonHtml;
+            }
+        });
+
+        // CSV 예시 모달 표시 함수
+        function showCSVExample() {
+            const modal = new bootstrap.Modal(document.getElementById('csvExampleModal'));
+            modal.show();
+        }
+
+        // CSV 예시 모달 닫기
+        function closeCSVExample() {
+            document.getElementById('csvExampleModal').style.display = 'none';
+        }
+
+        // CSV 파일 선택 시 확인
+        document.getElementById('csvFile').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const fileName = file.name;
+                const fileExt = fileName.split('.').pop().toLowerCase();
+                
+                if (fileExt !== 'csv') {
+                    alert('CSV 파일만 업로드 가능합니다.');
+                    this.value = '';
+                    return;
+                }
+
+                const confirmMsg = '파일을 업로드하기 전에 다음 사항을 확인해주세요:\n\n' +
+                    '1. CSV 파일이 지정된 포맷을 따르고 있나요?\n' +
+                    '2. 학생 이름에 오타가 없나요?\n' +
+                    '3. 실력 점수가 1-10점 사이의 값인가요?\n' +
+                    '4. 최종 프로젝트 선호도가 올바르게 입력되어 있나요?\n\n' +
+                    '계속 진행하시겠습니까?';
+
+                if (!confirm(confirmMsg)) {
+                    this.value = '';
+                    return;
+                }
+
+                document.querySelector('.file-input-label').textContent = fileName;
+            }
+        });
+
+        function downloadCSV() {
+            if (!currentCombinations[currentIndex]) return;
+            
+            const data = currentCombinations[currentIndex];
+            const satisfactionPercent = ((data.satisfactionScore / data.maxPossibleScore) * 100).toFixed(2);
+            
+            // 헤더 정보
+            let csvContent = `팀 조합 ${data.combinationNumber}\n`;
+            csvContent += `수강생 만족도: ${data.satisfactionScore}/${data.maxPossibleScore} = ${satisfactionPercent}%\n\n`;
+            
+            // 팀별로 데이터 구성
+            const teams = Array(5).fill().map(() => []);
+            data.assignment.forEach((teamNum, studentIdx) => {
+                teams[teamNum].push({
+                    name: data.studentNames[studentIdx],
+                    skill: data.skills[studentIdx]
+                });
+            });
+            
+            // 팀별 정보 추가
+            teams.forEach((members, teamIdx) => {
+                const avgSkill = members.reduce((sum, student) => sum + student.skill, 0) / members.length;
+                csvContent += `Team ${teamIdx + 1} (평균 실력: ${avgSkill.toFixed(1)}점)\n`;
+                csvContent += "이름,실력 점수\n";
+                
+                members.forEach(student => {
+                    csvContent += `${student.name},${student.skill}\n`;
+                });
+                csvContent += "\n"; // 팀 구분을 위한 빈 줄
+            });
+            
+            const blob = new Blob(["\ufeff" + csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = window.URL.createObjectURL(blob);
+            link.download = `팀_조합_${data.combinationNumber}.csv`;
+            link.click();
+        }
+
+        async function downloadPDF() {
+            if (!currentCombinations[currentIndex]) return;
+            
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            const data = currentCombinations[currentIndex];
+            
+            // 영문으로 기본 정보 작성
+            doc.setFontSize(16);
+            doc.text(`Team Combination ${data.combinationNumber}`, 20, 20);
+            
+            const satisfactionPercent = ((data.satisfactionScore / data.maxPossibleScore) * 100).toFixed(2);
+            doc.setFontSize(12);
+            doc.text(`Student Satisfaction: ${data.satisfactionScore}/${data.maxPossibleScore} = ${satisfactionPercent}%`, 20, 30);
+            
+            let yPos = 50;
+            const teams = Array(5).fill().map(() => []);
+            data.assignment.forEach((teamNum, studentIdx) => {
+                teams[teamNum].push({
+                    name: data.studentNames[studentIdx],
+                    skill: data.skills[studentIdx]
+                });
+            });
+            
+            teams.forEach((members, teamIdx) => {
+                doc.setFontSize(14);
+                doc.text(`Team ${teamIdx + 1}`, 20, yPos);
+                yPos += 10;
+                
+                const avgSkill = members.reduce((sum, student) => sum + student.skill, 0) / members.length;
+                doc.setFontSize(12);
+                doc.text(`Average Skill: ${avgSkill.toFixed(1)}`, 30, yPos);
+                yPos += 10;
+                
+                members.forEach(student => {
+                    // 한글 이름은 이미지로 변환하여 삽입
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    canvas.width = 200;
+                    canvas.height = 20;
+                    ctx.font = '12px Arial';
+                    ctx.fillStyle = 'black';
+                    ctx.fillText(`${student.name} (${student.skill})`, 0, 15);
+                    
+                    const imgData = canvas.toDataURL('image/png');
+                    doc.addImage(imgData, 'PNG', 30, yPos - 7, 70, 10);
+                    yPos += 7;
+                });
+                
+                yPos += 5;
+            });
+            
+            doc.save(`team_combination_${data.combinationNumber}.pdf`);
+        }
+
+        // 디스코드 웹훅 전송 함수 추가
+        async function sendToDiscord() {
+            if (!currentCombinations[currentIndex]) return;
+            
+            const data = currentCombinations[currentIndex];
+            const satisfactionPercent = ((data.satisfactionScore / data.maxPossibleScore) * 100).toFixed(2);
+            
+            // 디스코드 메시지 포맷팅
+            let message = `📢 단위 프로젝트 팀 안내 - AI 활용 애플리케이션 개발  📢\n`;
+            message += `10기 여러분~  😊\n`;
+            message += `이제 마지막인 네 번째 단위 프로젝트의 조편성 공지 드립니다!! ✨\n\n`;
+            message += `단위 프로젝트 기간 : 2025. 5. 9. ~ 5. 12. (2일간)\n\n`;
+            message += `마지막 팀 구성은 지난 성취도 평가, 팀 프로젝트 점수, 강사님 평가, 상담 내용 등 종합적으로 고려하여 편성되었습니다!\n\n`;
+            message += `팀 구성을 확인하신 뒤 차주 수요일 점심시간까지 각 팀의 팀장님을 자유롭게 선출해서 ⁠프로젝트 채널에 올려주세요 👏👏\n\n`;
+            message += `마지막 단위 프로젝트인 만큼 다들 적극적으로 참여하셔서 좋은 성과 이루실 수 있기를 기원합니다!  💪🔥\n\n`;
+            message += `❌네 갈 길 가라~ 내 갈 길 간다~식의 태도 금지 ❌\n`;
+            message += `❌내가 잘하니까~ 네가 잘하니까~ 서로 떠넘기기&독재 금지 ❌\n`;
+            message += `❌팀원들과 협의 없이 회의 미팅 노쇼하기 금지❌\n`;
+            message += `같이 ⭐협업⭐하는 법을 잘 숙지해봅시다!\n\n`;
+            message += `힘들게 하는 분이 있다면 저에게 일러주십쇼 👊\n\n`;
+            message += `( 발표날에 구경하러 갈게요! 마이크 세팅도 도와드리겠습니다! 😉 )\n\n`;
+            message += `↓ 우리 팀 확인하기 ↓\n\n`;
+            
+            // 만족도 정보            
+            // 팀별 정보 구성
+            const teams = Array(5).fill().map(() => []);
+            data.assignment.forEach((teamNum, studentIdx) => {
+                teams[teamNum].push({
+                    name: data.studentNames[studentIdx],
+                });
+            });
+            
+            teams.forEach((members, teamIdx) => {
+                const avgSkill = members.reduce((sum, student) => sum + student.skill, 0) / members.length;
+                message += `**Team ${teamIdx + 1}\n`;
+                members.forEach(student => {
+                    message += `• ${student.name}\n`;
+                });
+                message += '\n';
+            });
+            
+            try {
+                const response = await fetch('/team/send_discord/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken'),
+                    },
+                    body: JSON.stringify({
+                        message: message
+                    })
+                });
+                
+                const result = await response.json();
+                if (result.success) {
+                    alert('디스코드로 팀 구성이 전송되었습니다.');
+                } else {
+                    alert('디스코드 전송 실패: ' + result.error);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('디스코드 전송 중 오류가 발생했습니다.');
+            }
+        }
+
+        // 균형도에 따른 색상 반환 함수
+        function getBalanceColor(balance) {
+            if (balance >= 80) return '#2ecc71';  // 높은 균형도
+            if (balance >= 60) return '#f1c40f';  // 중간 균형도
+            return '#e74c3c';  // 낮은 균형도
+        }
+
+        // 네비게이션 버튼 이벤트 리스너 추가
+        document.addEventListener('DOMContentLoaded', function() {
+            const prevButton = document.getElementById('prevButton');
+            const nextButton = document.getElementById('nextButton');
+            
+            prevButton.addEventListener('click', showPreviousCombination);
+            nextButton.addEventListener('click', showNextCombination);
+        });
+    </script>
+</body>
+</html> 

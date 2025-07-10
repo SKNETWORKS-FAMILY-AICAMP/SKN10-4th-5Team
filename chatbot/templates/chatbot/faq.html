@@ -1,0 +1,324 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>FAQ - SK네트웍스 Family AI Camp</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        :root {
+            --sk-orange: #FF6B00;
+            --sk-orange-light: #FF8534;
+            --sk-orange-dark: #E65000;
+            --sk-gray: #333333;
+            --sk-light-gray: #f4f4f4;
+        }
+        
+        body {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #FFF5EB 0%, #FFF 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            display: flex;
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 280px;
+            background-color: white;
+            padding: 20px;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 30px;
+        }
+
+        .faq-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        .category-title {
+            font-weight: 500;
+            color: var(--sk-gray);
+            cursor: pointer;
+            padding: 12px 15px;
+            background-color: white;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            border: 1px solid #eee;
+            margin-bottom: 10px;
+        }
+
+        .category-title:hover {
+            background-color: #FFF5EB;
+            color: var(--sk-orange);
+        }
+
+        .faq-item {
+            margin-bottom: 20px;
+            padding: 20px;
+            border-radius: 12px;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border: 1px solid #eee;
+        }
+
+        .faq-question {
+            color: var(--sk-orange);
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .faq-answer {
+            color: var(--sk-gray);
+            line-height: 1.6;
+        }
+
+        .nav-buttons {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+        }
+
+        .nav-button {
+            display: inline-flex;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            color: #333;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .nav-button:hover {
+            background-color: #f8f9fa;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .nav-button i {
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="nav-buttons">
+        <a href="{% url 'index' %}" class="nav-button">
+            <i class="fas fa-home"></i> 홈으로
+        </a>
+    </div>
+
+    <div class="container">
+        <div class="sidebar">
+            <h2>FAQ 카테고리</h2>
+            <div class="category-title" onclick="showCategory('attendance')">출결 관리</div>
+            <div class="category-title" onclick="showCategory('money')">훈련 장려금</div>
+            <div class="category-title" onclick="showCategory('curriculum')">교육 과정</div>
+            <div class="category-title" onclick="showCategory('facility')">시설/운영</div>
+            <div class="category-title" onclick="showCategory('learning')">학습 지원</div>
+        </div>
+
+        <div class="main-content">
+            <div class="faq-container" id="faq-content">
+                <!-- FAQ 내용이 여기에 동적으로 로드됩니다 -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // FAQ 데이터
+        const faqData = {
+                'attendance': {
+                    title: '출결 관리',
+                    items: [
+                        {
+                            question: '수업 중 흡연, 편의점 방문은 가능할까요?',
+                            answer: '절대 불가합니다. 수업 시간에 외부에 나가 자리를 비우는 것은 부정 훈련에 해당됩니다. 쉬는 시간에 해결하셔야 하며, 혹시라도 해당 행위가 확인 되면 경우에 따라 제적처리 될 수 있습니다.'
+                        },
+                        {
+                            question: '수업 중 외출, 병원 방문이 필요할 땐 어떻게 해야 할까요?',
+                            answer: '강사, 매니저에게 외출 일정을 꼭 공유 및 출석입력요청대장에 작성 후 HRD-NET 출결 어플로 외출을 누르고, 다녀온 후 복귀 및 복귀시간 작성을 해주세요.'
+                        },
+                        {
+                            question: '하루에 지각하고 조퇴를 중복되게 했어요. 어떻게 처리되나요?',
+                            answer: '모든 지각,조퇴,외출 등은 누적 횟수가 적용됩니다. ex) 오전에 지각하고 오후에 조퇴를 한다면 총 2회 입니다. 단위기간(1개월) 내 지각/조퇴/외출 3회는 1일 결석으로 처리됩니다.'
+                        },
+                        {
+                            question: '사용 가능한 병가 개수는 어떻게 되나요?',
+                            answer: '병가는 한 단위기간 내에 10%(2일) 사용 가능하며, 미사용 시 다음 단위기간으로 누적됩니다. 총 6개월 과정 동안 12개 발생 및 사용 가능합니다.'
+                        },
+                        {
+                            question: '병원에서 진료확인서 발급 받았을 때 반드시 확인해야 하는 사항에는 무엇이 있나요?',
+                            answer: '진료확인서에는 (이름, 병명, 내원일자, 직인(프린트 도장X)) 꼭 확인해주세요. 미기입 시 출석으로 인정 받으실 수 없습니다.'
+                        },
+                        {
+                            question: '예비군,민방위 등 국가 의무 훈련의 출결 처리는 어떻게 되나요?',
+                            answer: '훈련기간 동안은 공가처리로 증빙서류 제출 시 정상 출석으로 인정 되십니다.'
+                        }
+                    ]
+                },
+                'money': {
+                    title: '훈련 장려금',
+                    items: [
+                        {
+                            question: '훈련 장려금 미지급 대상은 어떤 경우일까요?',
+                            answer: '훈련에 참여하는 기간과 구직급여(실업급여)를 지급받는 기간이 중복되는 경우, 휴업급여를 지급받는 기간이 중복되는 경우, 중앙부처 또는 지자체 등으로 부터 구직활동 지원 목적의 수당을 지원받는 기간이 중복되는 경우 등이 해당됩니다.'
+                        },
+                        {
+                            question: '국민 취업 지원 제도 비용과 훈련 장려금 동시 수급 가능한가요?',
+                            answer: 'KDT 훈련과 국민 취업 지원 제도는 중복 수급 가능합니다. 1유형은 월 500,000원(최대) X 6개월, 2유형은 월 284,000원(최대) X 6개월 지원됩니다.'
+                        },
+                        {
+                            question: '훈련 장려금 지급일은 언제인가요?',
+                            answer: '훈련 장려금은 단위 기간 별 신청을 합니다. 단위 기간이란? (10월 30일 개강 시 ) → ex. 10월 30일 ~ 11월 29일, 11월 30일 ~ 12월 29일'
+                        }
+                    ]
+                },
+                'curriculum': {
+                    title: '교육 과정',
+                    items: [
+                        {
+                            question: '부트캠프 일정은 어떻게 되나요?',
+                            answer: '1. 교육 기간: 2025년 1월 ~ 2025년 6월(총 6개월) 2. 교육 시간: 평일 오전 9시 ~ 오후 6시(8시간) 3. 교육 장소: SK네트웍스 역삼 캠퍼스.'
+                        },
+                        {
+                            question: '과제는 어떻게 제출하나요?',
+                            answer: '1. 제출 플랫폼: GitHub 개인 레포지토리 활용 2. 제출 방법: 각 과제별 지정된 폴더에 코드 업로드 3. 제출 기한: 매주 금요일 오후 6시까지.'
+                        },
+                        {
+                            question: '팀 프로젝트는 어떻게 진행되나요?',
+                            answer: '1. 팀 구성: 4~5인 1조로 구성 2. 프로젝트 단계: 1차 미니 프로젝트(3월), 2차 미니 프로젝트(4월), 최종 프로젝트(5~6월) 3. 협업 방식: Notion과 GitHub 활용.'
+                        },
+                        {
+                            question: '프리코스 강의는 누가 들을 수 있나요?',
+                            answer: 'HRD-Net에 등록 완료된 수강생만 수강할 수 있습니다.'
+                        },
+                        {
+                            question: 'OT에서는 어떤 내용을 안내하나요?',
+                            answer: 'OT에서는 커리큘럼, 교육 방식, 네트워킹 등을 안내합니다.'
+                        },
+                        {
+                            question: '스터디 그룹은 어떻게 운영되나요?',
+                            answer: '예·복습, 자격증, 코딩테스트 중심으로 자율 참여 스터디가 구성됩니다.'
+                        },
+                        {
+                            question: '단위 프로젝트는 어떻게 구성되나요?',
+                            answer: '교육 단위마다 팀을 나누고, 정해진 기간 동안 프로젝트를 수행합니다.'
+                        }
+                    ]
+                },
+                'facility': {
+                    title: '시설/운영',
+                    items: [
+                        {
+                            question: '노트북 대여 신청은 어떻게 하나요?',
+                            answer: '입과 전 필수조사 구글 폼을 통해 신청할 수 있습니다.'
+                        },
+                        {
+                            question: '왜 본인 사진을 제출해야 하나요?',
+                            answer: '지정 좌석제 운영을 위한 본인 확인용입니다.'
+                        },
+                        {
+                            question: '재해보험은 왜 가입해야 하나요?',
+                            answer: '훈련 중 사고 발생 시 보상받기 위해 직업훈련생 재해보험 가입이 필요합니다.'
+                        },
+                        {
+                            question: '캠퍼스 운영 시간이 변경되면 어떻게 확인하나요?',
+                            answer: '디스코드 공지와 매니저 안내 메시지를 통해 확인할 수 있습니다.'
+                        },
+                        {
+                            question: '출입카드는 왜 필요하고 분실 시 어떻게 하나요?',
+                            answer: '출입 및 출결 확인용이며, 분실 시 매니저에게 재발급 요청해야 합니다.'
+                        },
+                        {
+                            question: '와이파이 연결이 안될 때 어떻게 하나요?',
+                            answer: '대체 와이파이 ID와 비밀번호를 공지에 따라 입력해 사용합니다.'
+                        }
+                    ]
+                },
+                'learning': {
+                    title: '학습 지원',
+                    items: [
+                        {
+                            question: '실습이 너무 어려워요. 어떻게 적응해야 하나요?',
+                            answer: '실습은 시험이 아니라 실패 허용 구간입니다. 틀리고 구글링하고 고치면서 배우는 게 핵심이에요. 실행 방법: 1. 실습 시간엔 처음부터 정답 찾으려 하지 말고, 빈칸부터 채워보기 2. 막히는 포인트는 주석으로 표시하고 저장 3. 수업 끝난 뒤엔 GitHub에 코드를 올리고, 주석으로 정리.'
+                        },
+                        {
+                            question: '복습을 잘 못 하겠어요. 어떻게 해야 하나요?',
+                            answer: '복습은 전체 반복이 아니라 오늘 막혔던 1~2개만 복습하는 구조로 접근해야 유지됩니다. 실행 방법: 1. 수업이 끝난 직후 → 오늘 막혔던 코드 복사해서 Notion에 붙여놓기 2. 저녁에 그 코드 다시 실행해보기 + 한 줄씩 설명 주석 달기 3. 블로그 회고에 오늘 이해한 것 설명하기.'
+                        },
+                        {
+                            question: '구글링으로 혼자 해결하는 게 어렵습니다.',
+                            answer: '검색은 기술입니다. 문장 쓰듯 찾지 말고, 키워드 단위로 쪼개세요. 실행 방법: 1. 검색할 땐 파이썬 + 문제 핵심 키워드 조합으로 검색 2. Stack Overflow 찾을 땐 에러 메시지 전체 복붙 → 첫 5개 답변만 정독 3. 찾은 코드 중 마음에 드는 것 1개를 직접 타이핑하며 실행 + 주석 추가.'
+                        },
+                        {
+                            question: '멘탈이 자꾸 무너집니다. 지치는 걸 어떻게 극복하죠?',
+                            answer: '중요한 건 멘탈을 올리는 기술보다 무너지지 않게 받쳐주는 습관입니다. 실행 방법: 1. 하루 마무리에 오늘 이건 해냈다를 다이어리에 1문장 기록 2. 매주 금요일, 그 기록을 5분간 읽어보며 스스로의 흐름 확인 3. 누군가의 회고글에 댓글 1개 달기 → 공감 공유가 멘탈에 큰 버팀목이 됨.'
+                        },
+                        {
+                            question: '질문을 잘 못하겠어요. 부끄럽고 눈치 보여요.',
+                            answer: '질문은 모르는 걸 묻는 것이 아니라, 공유 가능한 사고의 흔적입니다. 실행 방법: 1. 실습 중 막히면 질문 후보 태그 달기 → 수업 끝난 뒤 정제해서 공유 2. 질문 포맷 고정: 문제상황 → 내가 시도한 방법 → 막힌 지점 요약 3. 자주 했던 질문 모음집을 따로 정리해두기.'
+                        },
+                        {
+                            question: '입교 초기에 가장 힘들었던 점은?',
+                            answer: '과도한 학습량, 프로그래밍 난이도, 새로운 환경 적응, 정보 부족 등이 주요 어려움이었습니다.'
+                        },
+                        {
+                            question: '초기 어려움을 극복하기 위해 어떤 루틴을 사용했나요?',
+                            answer: '계획적인 루틴, ChatGPT 등 도구 활용, 스터디 참여, 꾸준한 실습과 회고가 도움이 되었습니다.'
+                        },
+                        {
+                            question: '입교 초기에 알았더라면 좋았을 꿀팁은?',
+                            answer: 'Cursor 등 생산성 도구, 운동 루틴, 시간 관리 방법, 캠퍼스 시설 활용법 등이 유용한 정보였습니다.'
+                        },
+                        {
+                            question: '입교 초기에 기억에 남는 작은 성공은 무엇인가요?',
+                            answer: '처음 문제를 해결한 경험, 팀 과제 수행, GPT 도구 성공적 활용 등에서 성취감을 느꼈습니다.'
+                        },
+                        {
+                            question: '블로그 회고는 어떻게 작성하나요?',
+                            answer: '주차별 학습 내용을 블로그에 기록하고 회고 시트에 링크를 제출합니다.'
+                        },
+                        {
+                            question: 'LLM 수업에서 GPT나 Runpod 비용은 어떻게 지원받나요?',
+                            answer: '수강생이 먼저 결제 후 구글 폼에 증빙 제출하면 실비로 환급됩니다.'
+                        }
+                    ]
+                }
+            };
+
+        function showCategory(categoryId) {
+            const category = faqData[categoryId];
+            let html = `<h2>${category.title}</h2>`;
+            
+            category.items.forEach(item => {
+                html += `
+                    <div class="faq-item">
+                        <div class="faq-question">${item.question}</div>
+                        <div class="faq-answer">${item.answer}</div>
+                    </div>
+                `;
+            });
+            
+            document.getElementById('faq-content').innerHTML = html;
+        }
+
+        // 초기 카테고리 표시
+        showCategory('attendance');
+    </script>
+</body>
+</html> 

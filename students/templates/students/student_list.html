@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>수강생 목록</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+    <style>
+        body {
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        .subtitle {
+            font-size: 1.2rem;
+            color: rgba(255,255,255,0.9);
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+        .container {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        select.form-control {
+            width: 200px;
+            margin-left: 10px;
+        }
+        .table th {
+            background-color: #FFF5F0;
+        }
+        .add-button {
+            margin-bottom: 20px;
+            float: right;
+        }
+        .stats-card {
+            background-color: #fff;
+            transition: all 0.3s ease;
+        }
+        .stats-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(255, 107, 0, 0.2);
+        }
+        .personality-chart .progress-bar:nth-child(5) { background-color: #FF6B00; }
+        .personality-chart .progress-bar:nth-child(4) { background-color: #FF8534; }
+        .personality-chart .progress-bar:nth-child(3) { background-color: #FF9B5E; }
+        .personality-chart .progress-bar:nth-child(2) { background-color: #FFB285; }
+        .personality-chart .progress-bar:nth-child(1) { background-color: #FFC8AD; }
+        
+        .personality-chart .progress-bar.bg-info { background-color: #FF6B00 !important; }
+        .personality-chart .progress-bar.bg-danger { background-color: #FF8534 !important; }
+        
+        .score-item .progress-bar {
+            background-image: linear-gradient(to right, #FF6B00, #FF8534);
+        }
+        
+        .btn-primary {
+            background-color: #FF6B00;
+            border-color: #FF6B00;
+        }
+        .btn-primary:hover {
+            background-color: #FF8534;
+            border-color: #FF8534;
+        }
+        
+        .btn-outline-primary {
+            color: #FF6B00;
+            border-color: #FF6B00;
+        }
+        .btn-outline-primary:hover {
+            background-color: #FF6B00;
+            border-color: #FF6B00;
+            color: white;
+        }
+        .badge-warning {
+            background-color: #dc3545;
+            color: white;
+            font-size: 0.75rem;
+            padding: 0.25em 0.6em;
+            border-radius: 0.5rem;
+        }
+        
+        .badge-excellent {
+            background-color: #28a745;
+            color: white;
+            font-size: 0.75rem;
+            padding: 0.25em 0.6em;
+            border-radius: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- 웰컴 섹션 추가 -->
+    <div class="container" style="background-color: #FF6B00; 
+        font-size: 3.5rem;
+        font-weight: 700;
+        color: white;
+        text-align: center;
+        margin: 4rem auto;
+        padding: 4rem;
+        background: linear-gradient(135deg, #FF6B00 0%, #FF8534 100%);
+        border-radius: 2rem;
+        box-shadow: 0 20px 40px rgba(255, 107, 0, 0.2);">
+        수강생 매니저 V.1.0.0
+        <div class="subtitle">SK네트웍스 Family와 함께하는 AI 부트캠프</div>
+        <div class="subtitle">매니저님들의 칼퇴를 환상 응원합니다</div>
+    </div>
+
+    <div class="container mt-4">
+        <h2 class="mb-4">수강생 관리</h2>
+        
+        <!-- 기수 선택 드롭다운 -->
+        <div class="mb-4">
+            <form method="get" class="form-inline">
+                <div class="form-group">
+                    <label for="cohort" class="mr-2">기수 선택:</label>
+                    <select name="cohort" id="cohort" class="form-control" onchange="this.form.submit()">
+                        {% for cohort in cohorts %}
+                            <option value="{{ cohort.id }}" {% if cohort == selected_cohort %}selected{% endif %}>
+                                {{ cohort.number }}기
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </form>
+        </div>
+
+        <!-- 기수 선택 드롭다운 아래에 추가 -->
+        {% if cohort_stats %}
+        <div class="cohort-overview mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ selected_cohort.number }}기 진행률</h5>
+                    
+                    <!-- 진행률 표시 추가 -->
+                    <div class="progress mb-2" style="height: 25px;">
+                        <div class="progress-bar" role="progressbar" 
+                             style="width: {{ progress }}%; background: linear-gradient(135deg, #FF6B00 0%, #FF8534 100%);"
+                             aria-valuenow="{{ progress }}" aria-valuemin="0" aria-valuemax="100">
+                            진행률 {{ progress }}% (남은 기간: {{ days_remaining }}일)
+                        </div>
+                    </div>
+                    
+                    <!-- 날짜 구간 표시 추가 -->
+                    <div class="d-flex justify-content-between px-2 mb-4" style="font-size: 0.8rem; color: #666;">
+                        <span>{{ selected_cohort.start_date|date:"Y.m.d" }}</span>
+                        <span>{{ selected_cohort.start_date|add_days:quarter_duration|date:"Y.m.d" }}</span>
+                        <span>{{ selected_cohort.start_date|add_days:half_duration|date:"Y.m.d" }}</span>
+                        <span>{{ selected_cohort.start_date|add_days:three_quarter_duration|date:"Y.m.d" }}</span>
+                        <span>{{ selected_cohort.end_date|date:"Y.m.d" }}</span>
+                    </div>
+                    
+                    <!-- 기본 통계 -->
+                    <div class="row mb-4">
+                        <div class="col-md-3">
+                            <div class="stats-card text-center p-3 border rounded">
+                                <h6>전체 수강생</h6>
+                                <h3>{{ cohort_stats.total_students }}명</h3>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stats-card text-center p-3 border rounded">
+                                <h6>전공자 비율</h6>
+                                <h3>{{ cohort_stats.major_ratio.major }}:{{ cohort_stats.major_ratio.non_major }}</h3>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stats-card text-center p-3 border rounded">
+                                <h6>평균 나이</h6>
+                                <h3>{{ cohort_stats.avg_age|floatformat:1 }}세</h3>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stats-card text-center p-3 border rounded">
+                                <h6>전체 평균 점수</h6>
+                                <h3>{{ cohort_stats.total_average|floatformat:1 }}점</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 성격 분포 -->
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <h6>성격 유형 분포</h6>
+                            <div class="personality-chart">
+                                <div class="progress" style="height: 25px;">
+                                    {% for type, count in cohort_stats.personality_distribution.items %}
+                                    <div class="progress-bar" role="progressbar" 
+                                         style="width: {% widthratio count cohort_stats.total_students 100 %}%"
+                                         title="{{ type }}: {{ count }}명">
+                                        {{ count }}
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                                <div class="mt-2 small text-muted text-center">
+                                    매우 내향적 → 매우 외향적
+                                </div>
+                            </div>
+
+                            <!-- 성별 비율 -->
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <h6>성별 비율</h6>
+                            <div class="personality-chart">
+                                <div class="progress" style="height: 25px;">
+                                    <div class="progress-bar bg-info" role="progressbar" 
+                                         style="width: {% widthratio cohort_stats.gender_ratio.male cohort_stats.total_students 100 %}%"
+                                         title="남자: {{ cohort_stats.gender_ratio.male }}명">
+                                        {{ cohort_stats.gender_ratio.male }}
+                                    </div>
+                                    <div class="progress-bar bg-danger" role="progressbar" 
+                                         style="width: {% widthratio cohort_stats.gender_ratio.female cohort_stats.total_students 100 %}%"
+                                         title="여자: {{ cohort_stats.gender_ratio.female }}명">
+                                        {{ cohort_stats.gender_ratio.female }}
+                                    </div>
+                                </div>
+                                <div class="mt-2 small text-muted text-center">
+                                    남자 / 여자
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                        </div>
+                        
+                        
+                        <!-- 평균 점수 분포 -->
+                        <div class="col-md-6">
+                            <h6>평가 항목별 평균</h6>
+                            {% for item, score in cohort_stats.score_averages.items %}
+                            <div class="score-item mb-2">
+                                <div class="d-flex justify-content-between mb-1">
+                                    <span>
+                                        {% if item == 'leadership' %}
+                                            리더십
+                                        {% elif item == 'motivation' %}
+                                            학업의지
+                                        {% elif item == 'achievement' %}
+                                            성취도
+                                        {% elif item == 'instructor_rating' %}
+                                            강사평가
+                                        {% elif item == 'peer_rating' %}
+                                            협업선호도
+                                        {% else %}
+                                            {{ item }}
+                                        {% endif %}
+                                    </span>
+                                    <span>{{ score|floatformat:1 }}</span>
+                                </div>
+                                <div class="progress" style="height: 10px;">
+                                    <div class="progress-bar bg-info" role="progressbar" 
+                                         style="width: {% widthratio score 10 100 %}%">
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- 학생 목록 테이블 -->
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>이름</th>
+                    <th>리더십</th>
+                    <th>성격</th>
+                    <th>학업의지</th>
+                    <th>성취도</th>
+                    <th>강사평가</th>
+                    <th>협업선호도</th>
+                    <th>평균점수</th>
+                    <th>작업</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for student in students %}
+                <tr>
+                    <td>
+                        {{ student.name }}
+                        {% if student.average_score <= 4 %}
+                            <span class="badge-warning ms-2">주의 요망</span>
+                        {% elif student.average_score >= 7 %}
+                            <span class="badge-excellent ms-2">우수 수강생</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ student.leadership }}</td>
+                    <td>{{ student.get_personality_display }}</td>
+                    <td>{{ student.motivation }}</td>
+                    <td>{{ student.achievement }}</td>
+                    <td>{{ student.instructor_rating }}</td>
+                    <td>{{ student.peer_rating }}</td>
+                    <td>
+                        {% if student.average_score <= 4 %}
+                            <span class="text-danger">{{ student.average_score|floatformat:1 }}</span>
+                        {% elif student.average_score >= 7 %}
+                            <span class="text-success">{{ student.average_score|floatformat:1 }}</span>
+                        {% else %}
+                            {{ student.average_score|floatformat:1 }}
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div class="d-flex gap-2">
+                            <button type="button" 
+                                    class="btn btn-sm btn-outline-info" 
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#viewModal{{ student.id }}">
+                                보기
+                            </button>
+                            <a href="{% url 'students:edit_student' student.id %}" 
+                               class="btn btn-sm btn-outline-primary">
+                                편집
+                            </a>
+                            <button type="button" 
+                                    class="btn btn-sm btn-outline-danger" 
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#deleteModal{{ student.id }}">
+                                삭제
+                            </button>
+                        </div>
+                        
+                        <!-- 상세 보기 모달 -->
+                        <div class="modal fade" id="viewModal{{ student.id }}" tabindex="-1">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">수강생 상세 정보</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <h6 class="mb-3">기본 정보</h6>
+                                                <p><strong>이름:</strong> {{ student.name }}</p>
+                                                <p><strong>성별:</strong> {{ student.get_gender_display }}</p>
+                                                <p><strong>나이:</strong> {{ student.age }}세</p>
+                                                <p><strong>전공 여부:</strong> {% if student.is_major %}전공자{% else %}비전공자{% endif %}</p>
+                                                <p><strong>성격 유형:</strong> {{ student.get_personality_display }}</p>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <h6 class="mb-3">평가 점수</h6>
+                                                <p><strong>리더십:</strong> {{ student.leadership }}</p>
+                                                <p><strong>학업의지:</strong> {{ student.motivation }}</p>
+                                                <p><strong>성취도:</strong> {{ student.achievement }}</p>
+                                                <p><strong>강사평가:</strong> {{ student.instructor_rating }}</p>
+                                                <p><strong>협업선호도:</strong> {{ student.peer_rating }}</p>
+                                                <p><strong>평균 점수:</strong> 
+                                                    <span class="{% if student.average_score <= 4 %}text-danger{% elif student.average_score >= 7 %}text-success{% endif %}">
+                                                        {{ student.average_score|floatformat:1 }}
+                                                    </span>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        {% if student.first_counseling or student.second_counseling or student.third_counseling %}
+                                        <div class="mt-4">
+                                            <h6 class="mb-3">상담 기록</h6>
+                                            {% if student.first_counseling %}
+                                                <p><strong>1차 상담:</strong> {{ student.first_counseling }}</p>
+                                            {% endif %}
+                                            {% if student.second_counseling %}
+                                                <p><strong>2차 상담:</strong> {{ student.second_counseling }}</p>
+                                            {% endif %}
+                                            {% if student.third_counseling %}
+                                                <p><strong>3차 상담:</strong> {{ student.third_counseling }}</p>
+                                            {% endif %}
+                                        </div>
+                                        {% endif %}
+                                        {% if student.special_note %}
+                                        <div class="mt-4">
+                                            <h6 class="mb-3">특이사항</h6>
+                                            <p>{{ student.special_note }}</p>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 삭제 확인 모달 -->
+                        <div class="modal fade" id="deleteModal{{ student.id }}" tabindex="-1">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">수강생 삭제 확인</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p><strong>{{ student.name }}</strong> 수강생을 정말 삭제하시겠습니까?</p>
+                                        <p class="text-danger">이 작업은 되돌릴 수 없습니다.</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                                        <a href="{% url 'students:delete_student' student.id %}" 
+                                           class="btn btn-danger">삭제</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="9" class="text-center">등록된 학생이 없습니다.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- 테이블 아래 버튼 섹션 수정 -->
+        {% if selected_cohort %}
+        <div class="text-center mt-4">
+            <div class="d-flex justify-content-center gap-3">
+                <a href="{% url 'students:add_student' %}?cohort_id={{ selected_cohort.id }}" 
+                   class="btn btn-primary btn-lg">
+                    수강생 추가
+                </a>
+                <a href="{% url 'team_manager:index' %}" 
+                   class="btn btn-outline-primary btn-lg">
+                    <i class="bi bi-people-fill me-2"></i>팀 짜기
+                </a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html> 

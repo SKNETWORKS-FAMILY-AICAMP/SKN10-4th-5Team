@@ -1,0 +1,31 @@
+"""
+URL configuration for ebdjango project.
+
+The `urlpatterns` list routes URLs to views. For more information please see:
+    https://docs.djangoproject.com/en/5.2/topics/http/urls/
+Examples:
+Function views
+    1. Add an import:  from my_app import views
+    2. Add a URL to urlpatterns:  path('', views.home, name='home')
+Class-based views
+    1. Add an import:  from other_app.views import Home
+    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
+Including another URLconf
+    1. Import the include() function: from django.urls import include, path
+    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
+"""
+from django.contrib import admin
+from django.urls import path, include
+from chatbot import views  # chatbot의 views를 직접 import
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('', views.index, name='index'),
+    path('chat/', views.chat_home, name='chat_home'),
+    path('faq/', views.faq_home, name='faq_home'),  # FAQ 페이지 추가
+    path('message/', views.message, name='chat_message'),
+    path('game/', views.game, name='game'),
+    path('team/', include('team_manager.urls')),  # namespace 추가
+    path('students/', include('students.urls')),
+   
+]

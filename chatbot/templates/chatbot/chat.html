@@ -1,0 +1,733 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI 챗봇</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.7.13/lottie.min.js"></script>
+    <style>
+        :root {
+            --sk-orange: #FF6B00;
+            --sk-orange-light: #FF8534;
+            --sk-orange-dark: #E65000;
+            --sk-gray: #333333;
+            --sk-light-gray: #f4f4f4;
+        }
+        
+        body {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #FFF5EB 0%, #FFF 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .chat-interface {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            gap: 2rem;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            height: 100vh;
+        }
+
+        .chat-container {
+            flex: 1;
+            max-width: 700px;
+            background: transparent;
+            padding: 10px;
+            box-shadow: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            height: calc(100vh - 4rem);
+            min-height: auto;
+        }
+
+        .chat-messages {
+            flex: 1;
+            height: auto;
+            min-height: 0;
+            max-height: none;
+            background: transparent;
+            border: none;
+            padding: 10px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .message {
+            position: relative;
+            margin: 20px 0;
+            padding: 15px 20px;
+            border-radius: 20px;
+            max-width: 70%;
+            animation: messageAppear 0.3s forwards;
+        }
+
+        .bot-message {
+            background-color: white;
+            margin-right: auto;
+            margin-left: 50px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .bot-message::before {
+            content: '';
+            width: 40px;
+            height: 40px;
+            background: var(--sk-orange);
+            border-radius: 50%;
+            position: absolute;
+            left: -50px;
+            top: 50%;
+            transform: translateY(-50%);
+            background-image: url("{% static 'images/halu/base.svg' %}");
+            background-size: cover;
+        }
+
+        .user-message {
+            background-color: var(--sk-orange);
+            color: white;
+            margin-left: auto;
+            margin-right: 20px;
+        }
+
+        .chat-input {
+            position: relative;
+            width: 100%;
+            max-width: 700px;
+            margin: 0 auto;
+            background: white;
+            padding: 12px;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .chat-input input {
+            width: calc(100% - 60px);
+            padding: 15px;
+            border: none;
+            background: transparent;
+            font-size: 16px;
+        }
+
+        .chat-input button {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .character-name {
+            font-size: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .character-status {
+            font-size: 1.1rem;
+            margin-top: 0.5rem;
+            color: #666;
+            min-height: 1.5em;
+        }
+
+        /* 모바일 대응 */
+        @media (max-width: 768px) {
+            .chat-interface {
+                flex-direction: column;
+                padding: 1rem;
+            }
+
+            .character-container {
+                position: relative;
+                width: 100%;
+                max-width: 300px;
+                margin: 0 auto;
+                height: auto;
+                padding: 1rem 0;
+            }
+
+            .character-wrapper {
+                width: 200px;
+                height: 200px;
+            }
+
+            .chat-container {
+                height: calc(100vh - 400px);
+            }
+        }
+
+        /* 홈 버튼 스타일 추가 */
+        .nav-buttons {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+        }
+
+        .nav-button {
+            display: inline-flex;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            color: #333;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .nav-button:hover {
+            background-color: #f8f9fa;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .nav-button i {
+            margin-right: 8px;
+        }
+
+        .character-container {
+            position: sticky;
+            top: 2rem;
+            width: 300px;
+            text-align: center;
+            margin-bottom: 0;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            height: calc(100vh - 8rem);
+            padding: 2rem 0;
+        }
+
+        .character-wrapper {
+            width: 250px;
+            height: 250px;
+            margin: 0 auto;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .character-wrapper:hover {
+            transform: scale(1.05);
+        }
+
+        .character-wrapper:active {
+            transform: scale(0.95);
+        }
+
+        #halu-character {
+            width: 100%;
+            height: 100%;
+            transition: all 0.3s ease;
+        }
+
+        /* 감정 애니메이션 */
+        #halu-character.happy {
+            animation: bounce 0.5s ease;
+        }
+
+        #halu-character.thinking {
+            animation: thinking-motion 2s ease-in-out infinite;
+        }
+
+        #halu-character.surprised {
+            animation: shake 0.5s ease;
+        }
+
+        /* 말풍선 효과 */
+        .character-bubble {
+            position: absolute;
+            top: -60px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            padding: 10px 15px;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: all 0.3s ease;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+
+        .character-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-top: 8px solid white;
+        }
+
+        .character-wrapper:hover .character-bubble {
+            opacity: 1;
+            top: -70px;
+        }
+
+        /* 애니메이션 키프레임 */
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+
+        @keyframes thinking-motion {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-3deg) translateY(-5px); }
+            75% { transform: rotate(3deg) translateY(-5px); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        /* 감정 상태 표시 */
+        .emotion-indicator {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .emotion-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #ddd;
+            transition: all 0.3s ease;
+        }
+
+        .emotion-dot.active {
+            background: var(--sk-orange);
+            transform: scale(1.2);
+        }
+
+        /* 하루 상태 메시지 스타일 추가 */
+        .thinking-dots {
+            display: inline-block;
+        }
+
+        .thinking-dots::after {
+            content: '';
+            animation: thinking 1.5s infinite;
+        }
+
+        @keyframes thinking {
+            0% { content: ''; }
+            25% { content: '.'; }
+            50% { content: '..'; }
+            75% { content: '...'; }
+            100% { content: ''; }
+        }
+
+        @keyframes messageAppear {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 스크롤바 스타일링 */
+        .chat-messages::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .chat-messages::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background-color: rgba(255, 107, 0, 0.2);
+            border-radius: 4px;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb:hover {
+            background-color: rgba(255, 107, 0, 0.4);
+        }
+
+        /* 추천 질문 버튼 스타일 */
+        .suggestions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 10px 0;
+        }
+
+        .suggestion-button {
+            background-color: white;
+            border: 1px solid var(--sk-orange);
+            color: var(--sk-orange);
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .suggestion-button:hover {
+            background-color: var(--sk-orange);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 5px rgba(255, 107, 0, 0.2);
+        }
+
+        /* 채팅 컨테이너 수정 */
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-input-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: auto;
+        }
+
+        .game-link {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .game-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background-color: var(--sk-orange);
+            color: white;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+
+        .game-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 5px rgba(255, 107, 0, 0.2);
+            background-color: var(--sk-orange-light);
+        }
+
+        .team-button {
+            background-color: var(--sk-gray);
+        }
+
+        .team-button:hover {
+            background-color: #444444;
+        }
+    </style>
+</head>
+<body>
+    <!-- 홈 버튼 추가 -->
+    <div class="nav-buttons">
+        <a href="{% url 'index' %}" class="nav-button">
+            <i class="fas fa-home"></i> 홈으로
+        </a>
+    </div>
+
+    <div class="chat-interface">
+        <div class="character-container">
+            <div class="character-wrapper">
+                <div class="character-bubble" id="character-bubble">안녕하세요!</div>
+                <!-- 미니언 SVG 캐릭터 시작 -->
+                <svg id="halu-character" width="180" height="300" viewBox="0 0 180 300" xmlns="http://www.w3.org/2000/svg">
+                  <!-- 몸통 -->
+                  <ellipse cx="90" cy="160" rx="70" ry="110" fill="#ffe14d" stroke="#bfa600" stroke-width="4"/>
+                  <!-- 바지 -->
+                  <rect x="30" y="210" width="120" height="50" rx="25" fill="#2d4e7c"/>
+                  <!-- 바지선 -->
+                  <rect x="30" y="210" width="120" height="15" rx="7" fill="#1a2a3a"/>
+                  <!-- 눈(고글) -->
+                  <ellipse cx="90" cy="110" rx="35" ry="35" fill="#fff" stroke="#888" stroke-width="8"/>
+                  <ellipse cx="90" cy="110" rx="18" ry="18" fill="#7a4b1f"/>
+                  <ellipse cx="90" cy="110" rx="8" ry="8" fill="#fff"/>
+                  <ellipse cx="90" cy="110" rx="3" ry="3" fill="#222"/>
+                  <!-- 고글 스트랩 -->
+                  <rect x="20" y="100" width="140" height="18" rx="8" fill="#888"/>
+                  <!-- 입 -->
+                  <path d="M70 150 Q90 170 110 150" stroke="#a66a00" stroke-width="4" fill="none"/>
+                  <!-- 팔 -->
+                  <rect x="10" y="170" width="20" height="60" rx="10" fill="#ffe14d" stroke="#bfa600" stroke-width="4"/>
+                  <rect x="150" y="170" width="20" height="60" rx="10" fill="#ffe14d" stroke="#bfa600" stroke-width="4"/>
+                  <!-- 다리 -->
+                  <rect x="60" y="260" width="20" height="30" rx="8" fill="#222"/>
+                  <rect x="100" y="260" width="20" height="30" rx="8" fill="#222"/>
+                </svg>
+                <!-- 미니언 SVG 캐릭터 끝 -->
+            </div>
+            <div class="character-name">하루 (HARU)</div>
+            <div class="character-status" id="character-status">AI 매니저</div>
+            <div class="emotion-indicator">
+                <div class="emotion-dot" id="emotion-happy"></div>
+                <div class="emotion-dot" id="emotion-neutral"></div>
+                <div class="emotion-dot" id="emotion-thinking"></div>
+            </div>
+            <div class="game-link">
+                <a href="{% url 'game' %}" target="_blank" class="game-button">
+                    수업시간에 게임하기 
+                </a>
+                <a href="/team/" class="game-button team-button">
+                    <i class="fas fa-users"></i> 팀 매니저
+                </a>
+            </div>
+        </div>
+
+        <div class="chat-container">
+            <div class="chat-messages" id="chat-messages">
+            </div>
+            <div class="chat-input-container">
+                <div class="suggestions" id="suggestions">
+                    <!-- 추천 질문 버튼들이 여기에 동적으로 추가됩니다 -->
+                </div>
+                <div class="chat-input">
+                    <input type="text" id="user-input" placeholder="하루에게 메시지 보내기...">
+                    <button onclick="sendMessage()">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 랜덤 리액션 메시지
+        const reactions = [
+            "반가워요! 😊",
+            "무엇을 도와드릴까요?",
+            "궁금한 점이 있으신가요?",
+            "함께 해결해보아요!",
+            "어떤 이야기를 나눠볼까요?"
+        ];
+
+        // 캐릭터 인터랙션
+        const characterWrapper = document.querySelector('.character-wrapper');
+        const characterBubble = document.getElementById('character-bubble');
+        
+        characterWrapper.addEventListener('mouseenter', () => {
+            const randomMessage = reactions[Math.floor(Math.random() * reactions.length)];
+            characterBubble.textContent = randomMessage;
+            document.getElementById('halu-character').classList.add('happy');
+        });
+
+        characterWrapper.addEventListener('mouseleave', () => {
+            document.getElementById('halu-character').classList.remove('happy');
+        });
+
+        // 감정 상태 업데이트 함수 수정
+        function updateCharacterStatus(status) {
+            const statusDiv = document.getElementById('character-status');
+            const character = document.getElementById('halu-character');
+            const emotionDots = document.querySelectorAll('.emotion-dot');
+
+            // 이전 클래스 제거
+            character.className = '';
+            emotionDots.forEach(dot => dot.classList.remove('active'));
+
+            switch(status) {
+                case 'thinking':
+                    statusDiv.innerHTML = '생각하는 중<span class="thinking-dots"></span>';
+                    character.src = "{% static 'images/halu/thinking.svg' %}";
+                    character.classList.add('thinking');
+                    document.getElementById('emotion-thinking').classList.add('active');
+                    break;
+                case 'happy':
+                    statusDiv.textContent = '답변 완료!';
+                    character.src = "{% static 'images/halu/happy.svg' %}";
+                    character.classList.add('happy');
+                    document.getElementById('emotion-happy').classList.add('active');
+                    setTimeout(() => updateCharacterStatus('default'), 2000);
+                    break;
+                default:
+                    statusDiv.textContent = 'AI 매니저';
+                    character.src = "{% static 'images/halu/base.svg' %}";
+                    document.getElementById('emotion-neutral').classList.add('active');
+                    break;
+            }
+        }
+
+        async function addMessage(message, type) {
+            const messagesDiv = document.getElementById('chat-messages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}-message`;
+
+            if (type === 'bot') {
+                messageDiv.textContent = message;
+                messagesDiv.appendChild(messageDiv);
+                // 사용자 메시지 추가 후 즉시 스크롤
+                messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            } else {
+                messageDiv.textContent = message;
+                messagesDiv.appendChild(messageDiv);
+                // 사용자 메시지 추가 후 즉시 스크롤
+                messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            }
+
+            // 부드러운 스크롤 애니메이션 추가
+            messagesDiv.scrollTo({
+                top: messagesDiv.scrollHeight,
+                behavior: 'smooth'
+            });
+        }
+
+        // 추천 질문 버튼 생성 함수
+        function createSuggestionButtons(suggestions) {
+            const suggestionsDiv = document.getElementById('suggestions');
+            suggestionsDiv.innerHTML = ''; // 기존 버튼들 제거
+
+            suggestions.forEach(suggestion => {
+                const button = document.createElement('button');
+                button.className = 'suggestion-button';
+                button.textContent = suggestion;
+                button.onclick = () => {
+                    document.getElementById('user-input').value = suggestion;
+                    sendMessage();
+                };
+                suggestionsDiv.appendChild(button);
+            });
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById('user-input');
+            const message = input.value.trim();
+            if (!message) return;
+
+            addMessage(message, 'user');
+            input.value = '';
+
+            // 추천 질문 버튼 제거
+            document.getElementById('suggestions').innerHTML = '';
+
+            // 하루 상태 변경
+            updateCharacterStatus('thinking');
+
+            try {
+                const response = await fetch('/message/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken')
+                    },
+                    body: JSON.stringify({ message: message })
+                });
+                
+                const data = await response.json();
+                await addMessage(data.message, 'bot');
+                
+                // 추천 질문 버튼 생성
+                if (data.suggestions && data.suggestions.length > 0) {
+                    createSuggestionButtons(data.suggestions);
+                }
+
+                // 답변 완료 후 행복 상태로 변경
+                updateCharacterStatus('happy');
+            } catch (error) {
+                console.error('Error:', error);
+                updateCharacterStatus('default');
+            }
+        }
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        // Enter 키로 메시지 전송
+        document.getElementById('user-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        // 웰컴 메시지 부분 수정
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                // 오늘 날짜 구하기
+                const today = new Date();
+                const dateStr = today.toLocaleDateString('ko-KR', { 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric', 
+                    weekday: 'long' 
+                });
+                
+                // 커리큘럼 데이터
+                const curriculum = {
+                    '2024-01': 'Python 기초 프로그래밍',
+                    '2024-02': 'Database & Web Crawling',
+                    '2024-03': '데이터 분석과 머신러닝',
+                    '2024-04': '딥러닝과 AI 기초',
+                    '2024-05': 'LLM과 AI 애플리케이션',
+                    '2024-06': '최종 프로젝트'
+                };
+
+                const monthKey = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`;
+                const todayTopic = curriculum[monthKey] || '휴식';
+
+                // 커리큘럼 정보 메시지 추가
+                addMessage(`📅 ${dateStr}\n오늘의 학습: ${todayTopic}`, 'bot');
+                
+                // 잠시 후 하루 인사 메시지
+                setTimeout(() => {
+                    addMessage("안녕하세요! SK네트웍스 Family AI Camp의 AI 매니저 하루입니다. 무엇을 도와드릴까요? 😊", 'bot');
+                    
+                    // 추천 질문 가져오기
+                    fetch('/message/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': getCookie('csrftoken')
+                        },
+                        body: JSON.stringify({ message: "추천 질문 보여줘" })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.suggestions && data.suggestions.length > 0) {
+                            createSuggestionButtons(data.suggestions);
+                        }
+                    });
+                }, 1000);
+            }, 500);
+        });
+    </script>
+</body>
+</html> 
